@@ -166,7 +166,7 @@ export default function Devices() {
   const clearFilters = () => {
     setSearchKeyword("");
     setFilterStatus("all");
-    setFilterPhoneStatus("all");
+    
     setFilterRegion("all");
     setFilterDepartment("all");
   };
