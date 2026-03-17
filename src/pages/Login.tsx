@@ -22,10 +22,8 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center space-y-2">
-          <div className="mx-auto h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
-            GF
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight">Global Fleet Command</h1>
+          <img src="/favicon.png" alt="Seaisee" className="mx-auto h-12 w-12 rounded-xl object-contain" />
+          <h1 className="text-2xl font-bold tracking-tight">Seaisee</h1>
           <p className="text-sm text-muted-foreground">跨境电商智能运营平台</p>
         </div>
 

@@ -86,12 +86,10 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shrink-0">
-            GF
-          </div>
+          <img src="/favicon.png" alt="Seaisee" className="h-8 w-8 rounded-md shrink-0 object-contain" />
           {!collapsed && (
             <div className="overflow-hidden">
-              <div className="text-sm font-semibold text-sidebar-accent-foreground truncate">Global Fleet</div>
+              <div className="text-sm font-semibold text-sidebar-accent-foreground truncate">Seaisee</div>
               <div className="text-xs text-sidebar-muted truncate">{user?.tenant}</div>
             </div>
           )}
