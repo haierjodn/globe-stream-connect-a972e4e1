@@ -26,6 +26,7 @@ import TenantConfig from "@/pages/TenantConfig";
 import Billing from "@/pages/Billing";
 import BandwidthBilling from "@/pages/BandwidthBilling";
 import Audit from "@/pages/Audit";
+import RemoteControl from "@/pages/RemoteControl";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
