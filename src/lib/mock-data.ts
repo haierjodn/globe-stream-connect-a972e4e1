@@ -40,28 +40,75 @@ export const recentAlerts = [
 ];
 
 // Devices
+export interface BoundAccount {
+  platform: "TikTok" | "Facebook" | "Instagram" | "YouTube";
+  username: string;
+}
+
 export interface CloudDevice {
   id: string;
+  sn: string;
   name: string;
   status: "online" | "offline" | "error";
+  phoneStatus: "正常" | "离线" | "故障" | "维护中";
   ip: string;
   region: string;
-  latency: number;
-  cpu: number;
-  memory: number;
-  boundAccount?: string;
+  boundAccounts: BoundAccount[];
+  boundDepartment?: string;
+  boundEmployee?: string;
+  bindTime?: string;
+  expiryTime?: string;
   screenshot?: string;
 }
 
+// Department tree with employees
+export interface OrgNode {
+  id: string;
+  name: string;
+  type: "department" | "employee";
+  children?: OrgNode[];
+}
+
+export const orgTree: OrgNode[] = [
+  {
+    id: "D-001", name: "总部", type: "department",
+    children: [
+      {
+        id: "D-002", name: "运营部", type: "department",
+        children: [
+          { id: "E-001", name: "张伟", type: "employee" },
+          { id: "E-002", name: "李娜", type: "employee" },
+          { id: "E-003", name: "王芳", type: "employee" },
+        ],
+      },
+      {
+        id: "D-003", name: "技术部", type: "department",
+        children: [
+          { id: "E-004", name: "赵明", type: "employee" },
+          { id: "E-005", name: "刘洋", type: "employee" },
+        ],
+      },
+      {
+        id: "D-004", name: "销售部", type: "department",
+        children: [
+          { id: "E-006", name: "王磊", type: "employee" },
+          { id: "E-007", name: "陈静", type: "employee" },
+          { id: "E-008", name: "周杰", type: "employee" },
+        ],
+      },
+    ],
+  },
+];
+
 export const cloudDevices: CloudDevice[] = [
-  { id: "VM-001", name: "US-West-01", status: "online", ip: "192.168.1.101", region: "🇺🇸 洛杉矶", latency: 45, cpu: 32, memory: 48, boundAccount: "@fashionhub_us", screenshot: screenshotVm001 },
-  { id: "VM-002", name: "US-West-02", status: "online", ip: "192.168.1.102", region: "🇺🇸 洛杉矶", latency: 52, cpu: 65, memory: 72, boundAccount: "@beauty_deals", screenshot: screenshotVm002 },
-  { id: "VM-003", name: "UK-London-01", status: "online", ip: "10.0.2.55", region: "🇬🇧 伦敦", latency: 120, cpu: 18, memory: 35, boundAccount: "@uk_gadgets", screenshot: screenshotVm003 },
-  { id: "VM-004", name: "JP-Tokyo-01", status: "offline", ip: "10.0.3.12", region: "🇯🇵 东京", latency: 0, cpu: 0, memory: 0 },
-  { id: "VM-005", name: "SG-01", status: "online", ip: "172.16.0.88", region: "🇸🇬 新加坡", latency: 85, cpu: 41, memory: 55, boundAccount: "@sg_lifestyle", screenshot: screenshotVm005 },
-  { id: "VM-006", name: "DE-Frankfurt-01", status: "error", ip: "172.16.1.22", region: "🇩🇪 法兰克福", latency: 999, cpu: 98, memory: 95 },
-  { id: "VM-007", name: "US-East-01", status: "online", ip: "192.168.2.10", region: "🇺🇸 纽约", latency: 38, cpu: 55, memory: 60, boundAccount: "@nyc_trends", screenshot: screenshotVm007 },
-  { id: "VM-008", name: "AU-Sydney-01", status: "online", ip: "10.0.4.77", region: "🇦🇺 悉尼", latency: 165, cpu: 22, memory: 40, boundAccount: "@oz_store", screenshot: screenshotVm008 },
+  { id: "VM-001", sn: "SN20260301001", name: "US-West-01", status: "online", phoneStatus: "正常", ip: "192.168.1.101", region: "🇺🇸 洛杉矶", boundAccounts: [{ platform: "TikTok", username: "@fashionhub_us" }, { platform: "Facebook", username: "@fashionhub_fb" }], boundDepartment: "运营部", boundEmployee: "张伟", bindTime: "2026-01-15 08:30:00", expiryTime: "2026-07-15 23:59:59", screenshot: screenshotVm001 },
+  { id: "VM-002", sn: "SN20260301002", name: "US-West-02", status: "online", phoneStatus: "正常", ip: "192.168.1.102", region: "🇺🇸 洛杉矶", boundAccounts: [{ platform: "TikTok", username: "@beauty_deals" }, { platform: "Instagram", username: "@beauty_ig" }], boundDepartment: "运营部", boundEmployee: "李娜", bindTime: "2026-02-01 10:00:00", expiryTime: "2026-08-01 23:59:59", screenshot: screenshotVm002 },
+  { id: "VM-003", sn: "SN20260301003", name: "UK-London-01", status: "online", phoneStatus: "正常", ip: "10.0.2.55", region: "🇬🇧 伦敦", boundAccounts: [{ platform: "TikTok", username: "@uk_gadgets" }], boundDepartment: "运营部", boundEmployee: "王芳", bindTime: "2026-02-10 14:20:00", expiryTime: "2026-08-10 23:59:59", screenshot: screenshotVm003 },
+  { id: "VM-004", sn: "SN20260301004", name: "JP-Tokyo-01", status: "offline", phoneStatus: "离线", ip: "10.0.3.12", region: "🇯🇵 东京", boundAccounts: [], bindTime: "2026-01-20 09:00:00", expiryTime: "2026-07-20 23:59:59" },
+  { id: "VM-005", sn: "SN20260301005", name: "SG-01", status: "online", phoneStatus: "正常", ip: "172.16.0.88", region: "🇸🇬 新加坡", boundAccounts: [{ platform: "TikTok", username: "@sg_lifestyle" }, { platform: "YouTube", username: "@sg_life_yt" }], boundDepartment: "销售部", boundEmployee: "王磊", bindTime: "2026-03-01 11:30:00", expiryTime: "2026-09-01 23:59:59", screenshot: screenshotVm005 },
+  { id: "VM-006", sn: "SN20260301006", name: "DE-Frankfurt-01", status: "error", phoneStatus: "故障", ip: "172.16.1.22", region: "🇩🇪 法兰克福", boundAccounts: [], bindTime: "2026-01-05 16:00:00", expiryTime: "2026-04-05 23:59:59" },
+  { id: "VM-007", sn: "SN20260301007", name: "US-East-01", status: "online", phoneStatus: "正常", ip: "192.168.2.10", region: "🇺🇸 纽约", boundAccounts: [{ platform: "TikTok", username: "@nyc_trends" }, { platform: "Facebook", username: "@nyc_trends_fb" }, { platform: "Instagram", username: "@nyc_trends_ig" }], boundDepartment: "销售部", boundEmployee: "陈静", bindTime: "2026-02-20 08:00:00", expiryTime: "2026-08-20 23:59:59", screenshot: screenshotVm007 },
+  { id: "VM-008", sn: "SN20260301008", name: "AU-Sydney-01", status: "online", phoneStatus: "维护中", ip: "10.0.4.77", region: "🇦🇺 悉尼", boundAccounts: [{ platform: "TikTok", username: "@oz_store" }], boundDepartment: "技术部", boundEmployee: "赵明", bindTime: "2026-03-10 13:45:00", expiryTime: "2026-09-10 23:59:59", screenshot: screenshotVm008 },
 ];
 
 // IP Pool
