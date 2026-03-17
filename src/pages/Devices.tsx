@@ -1,13 +1,14 @@
 import { useState, useMemo, useRef } from "react";
 import { RemoteControlDialog } from "@/components/RemoteControlDialog";
-import { cloudDevices, ipResources, orgTree, type CloudDevice, type OrgNode, type BoundAccount } from "@/lib/mock-data";
+import { DeviceEditDialog } from "@/components/DeviceEditDialog";
+import { cloudDevices, orgTree, type CloudDevice, type OrgNode } from "@/lib/mock-data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Monitor, RotateCw, Globe,
-  LayoutGrid, List, Search, X, ChevronRight, ChevronDown, Plus, Trash2, CalendarIcon,
+  LayoutGrid, List, Search, X, Pencil,
 } from "lucide-react";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -15,21 +16,13 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover, PopoverContent, PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { toast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { format, parse } from "date-fns";
 
 const statusConfig = {
   online: { label: "在线", className: "bg-success/10 text-success border-success/20" },
   offline: { label: "离线", className: "bg-muted text-muted-foreground border-muted" },
   error: { label: "异常", className: "bg-destructive/10 text-destructive border-destructive/20" },
 };
-
-const platformOptions = ["TikTok", "Facebook", "Instagram", "YouTube"] as const;
 
 // ---- Inline editable name cell ----
 function EditableNameCell({ device, onNameChange }: { device: CloudDevice; onNameChange: (id: string, name: string) => void }) {
@@ -70,280 +63,6 @@ function EditableNameCell({ device, onNameChange }: { device: CloudDevice; onNam
   );
 }
 
-// ---- IP Selector from pool ----
-function IPSelector({ device, onIPChange }: { device: CloudDevice; onIPChange: (id: string, ip: string, region: string) => void }) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  // Available IPs: free ones + currently bound to this device
-  const availableIPs = useMemo(() => {
-    return ipResources.filter((ip) => {
-      if (ip.status === "禁用") return false;
-      if (ip.boundDevice && ip.boundDevice !== device.id) return false;
-      if (search) {
-        const kw = search.toLowerCase();
-        if (!ip.address.includes(kw) && !ip.region.toLowerCase().includes(kw)) return false;
-      }
-      return true;
-    });
-  }, [device.id, search]);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button className="font-mono text-sm cursor-pointer hover:text-primary hover:underline underline-offset-2 transition-colors text-left">
-          {device.ip}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-3" align="start">
-        <div className="text-xs font-medium text-muted-foreground mb-2">换绑IP（从资源池选择）</div>
-        <Input
-          placeholder="搜索IP或区域…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="h-8 text-xs mb-2"
-        />
-        <div className="max-h-[200px] overflow-auto space-y-0.5">
-          {availableIPs.length === 0 ? (
-            <div className="text-xs text-muted-foreground py-4 text-center">无可用IP</div>
-          ) : (
-            availableIPs.map((ip) => (
-              <button
-                key={ip.id}
-                className={cn(
-                  "w-full flex items-center justify-between px-2 py-1.5 rounded text-xs hover:bg-accent transition-colors text-left",
-                  ip.address === device.ip && "bg-primary/10 text-primary"
-                )}
-                onClick={() => {
-                  onIPChange(device.id, ip.address, ip.region);
-                  setOpen(false);
-                  setSearch("");
-                }}
-              >
-                <div>
-                  <span className="font-mono">{ip.address}</span>
-                  <span className="ml-2 text-muted-foreground">{ip.region}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Badge variant="outline" className="text-[10px] h-4">{ip.type}</Badge>
-                  <span className={cn(
-                    "text-[10px]",
-                    ip.purity >= 90 ? "text-success" : ip.purity >= 70 ? "text-warning" : "text-destructive"
-                  )}>
-                    纯净度 {ip.purity}%
-                  </span>
-                </div>
-              </button>
-            ))
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-// ---- Bound Accounts Editor ----
-function AccountsEditor({ device, onAccountsChange }: { device: CloudDevice; onAccountsChange: (id: string, accounts: BoundAccount[]) => void }) {
-  const [open, setOpen] = useState(false);
-  const [newPlatform, setNewPlatform] = useState<string>("TikTok");
-  const [newUsername, setNewUsername] = useState("");
-
-  const handleRemove = (index: number) => {
-    const updated = device.boundAccounts.filter((_, i) => i !== index);
-    onAccountsChange(device.id, updated);
-  };
-
-  const handleAdd = () => {
-    if (!newUsername.trim()) return;
-    const updated = [...device.boundAccounts, { platform: newPlatform as BoundAccount["platform"], username: newUsername.trim() }];
-    onAccountsChange(device.id, updated);
-    setNewUsername("");
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button className="text-left cursor-pointer hover:bg-accent/50 rounded px-1 -mx-1 py-0.5 transition-colors">
-          {device.boundAccounts.length > 0 ? (
-            <div className="space-y-0.5">
-              {device.boundAccounts.map((a, i) => (
-                <div key={i} className="text-xs font-mono text-primary whitespace-nowrap">
-                  {a.platform}:{a.username}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <span className="text-xs text-muted-foreground">+ 绑定账号</span>
-          )}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-3" align="start">
-        <div className="text-xs font-medium text-muted-foreground mb-2">管理绑定账号</div>
-        {/* Existing accounts */}
-        <div className="space-y-1 mb-3">
-          {device.boundAccounts.length === 0 && (
-            <div className="text-xs text-muted-foreground py-2 text-center">暂无绑定账号</div>
-          )}
-          {device.boundAccounts.map((a, i) => (
-            <div key={i} className="flex items-center justify-between px-2 py-1.5 rounded bg-muted/50 text-xs">
-              <div className="font-mono">
-                <Badge variant="outline" className="text-[10px] h-4 mr-1.5">{a.platform}</Badge>
-                {a.username}
-              </div>
-              <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => handleRemove(i)}>
-                <Trash2 className="h-3 w-3" />
-              </Button>
-            </div>
-          ))}
-        </div>
-        {/* Add new */}
-        <div className="flex items-center gap-1.5">
-          <Select value={newPlatform} onValueChange={setNewPlatform}>
-            <SelectTrigger className="w-[100px] h-7 text-xs">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {platformOptions.map((p) => (
-                <SelectItem key={p} value={p}>{p}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Input
-            placeholder="@username"
-            value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
-            className="h-7 text-xs flex-1"
-          />
-          <Button size="icon" className="h-7 w-7 shrink-0" onClick={handleAdd} disabled={!newUsername.trim()}>
-            <Plus className="h-3 w-3" />
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-// ---- DateTime Editor ----
-function DateTimeEditor({ value, onChange, label }: { value: string; onChange: (val: string) => void; label: string }) {
-  const [open, setOpen] = useState(false);
-
-  // Parse "2026-01-15 08:30:00" format
-  const dateObj = value ? parse(value, "yyyy-MM-dd HH:mm:ss", new Date()) : undefined;
-  const isValid = dateObj && !isNaN(dateObj.getTime());
-
-  const [timeValue, setTimeValue] = useState(isValid ? format(dateObj, "HH:mm") : "00:00");
-
-  const handleDateSelect = (day: Date | undefined) => {
-    if (!day) return;
-    const [hh, mm] = timeValue.split(":").map(Number);
-    day.setHours(hh || 0, mm || 0, 0);
-    onChange(format(day, "yyyy-MM-dd HH:mm:ss"));
-    setOpen(false);
-  };
-
-  const handleTimeChange = (newTime: string) => {
-    setTimeValue(newTime);
-    if (isValid && dateObj) {
-      const [hh, mm] = newTime.split(":").map(Number);
-      const updated = new Date(dateObj);
-      updated.setHours(hh || 0, mm || 0, 0);
-      onChange(format(updated, "yyyy-MM-dd HH:mm:ss"));
-    }
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button className="text-xs text-muted-foreground whitespace-nowrap cursor-pointer hover:text-primary hover:underline underline-offset-2 transition-colors text-left">
-          {value || (
-            <span className="flex items-center gap-1">
-              <CalendarIcon className="h-3 w-3" /> 设置{label}
-            </span>
-          )}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={isValid ? dateObj : undefined}
-          onSelect={handleDateSelect}
-          className={cn("p-3 pointer-events-auto")}
-        />
-        <div className="border-t px-3 py-2 flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">时间</span>
-          <Input
-            type="time"
-            value={timeValue}
-            onChange={(e) => handleTimeChange(e.target.value)}
-            className="h-7 text-xs w-[100px]"
-          />
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-// ---- Department / Employee tree selector ----
-function OrgTreeNode({ node, depth, onSelect }: { node: OrgNode; depth: number; onSelect: (node: OrgNode) => void }) {
-  const [expanded, setExpanded] = useState(depth < 2);
-  const hasChildren = node.children && node.children.length > 0;
-
-  return (
-    <div>
-      <div
-        className="flex items-center gap-1 py-1.5 px-2 rounded hover:bg-muted cursor-pointer text-sm"
-        style={{ paddingLeft: `${depth * 16 + 8}px` }}
-        onClick={() => {
-          if (hasChildren) setExpanded(!expanded);
-          onSelect(node);
-        }}
-      >
-        {hasChildren ? (
-          expanded ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0" />
-        ) : (
-          <span className="w-3" />
-        )}
-        <span className={node.type === "department" ? "font-medium" : ""}>{node.name}</span>
-        <Badge variant="outline" className="ml-auto text-[10px] h-4">
-          {node.type === "department" ? "部门" : "员工"}
-        </Badge>
-      </div>
-      {expanded && hasChildren && node.children!.map((child) => (
-        <OrgTreeNode key={child.id} node={child} depth={depth + 1} onSelect={onSelect} />
-      ))}
-    </div>
-  );
-}
-
-function DeptEmployeeSelector({ value, onChange }: { value: string; onChange: (val: string) => void }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-7 text-xs font-normal justify-start min-w-[80px]">
-          {value || "绑定"}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-60 p-2 max-h-[300px] overflow-auto" align="start">
-        <div className="text-xs font-medium text-muted-foreground mb-2 px-2">选择部门/员工</div>
-        {orgTree.map((node) => (
-          <OrgTreeNode
-            key={node.id}
-            node={node}
-            depth={0}
-            onSelect={(n) => {
-              onChange(n.name);
-              setOpen(false);
-            }}
-          />
-        ))}
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 // ---- Filters ----
 function getUniqueValues<T>(arr: T[], getter: (item: T) => string): string[] {
   return [...new Set(arr.map(getter).filter(Boolean))].sort();
@@ -353,6 +72,7 @@ export default function Devices() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [devices, setDevices] = useState(cloudDevices);
   const [remoteDevice, setRemoteDevice] = useState<CloudDevice | null>(null);
+  const [editDevice, setEditDevice] = useState<CloudDevice | null>(null);
 
   // Filters
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -391,24 +111,8 @@ export default function Devices() {
     toast({ title: "名称已更新", description: `设备 ${id} 名称已修改为 "${newName}"` });
   };
 
-  const handleBindChange = (id: string, field: "boundDepartment" | "boundEmployee", value: string) => {
-    setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));
-    toast({ title: "绑定已更新", description: `设备 ${id} 已绑定至 "${value}"` });
-  };
-
-  const handleIPChange = (id: string, ip: string, region: string) => {
-    setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, ip, region } : d)));
-    toast({ title: "IP已换绑", description: `设备 ${id} IP已更换为 ${ip}` });
-  };
-
-  const handleAccountsChange = (id: string, accounts: BoundAccount[]) => {
-    setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, boundAccounts: accounts } : d)));
-    toast({ title: "账号已更新", description: `设备 ${id} 绑定账号已修改` });
-  };
-
-  const handleDateChange = (id: string, field: "bindTime" | "expiryTime", value: string) => {
-    setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, [field]: value } : d)));
-    toast({ title: "时间已更新", description: `设备 ${id} ${field === "bindTime" ? "绑定时间" : "到期时间"}已修改` });
+  const handleDeviceSave = (updated: CloudDevice) => {
+    setDevices((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
   };
 
   return (
@@ -509,8 +213,8 @@ export default function Devices() {
                     </div>
                     <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                       <Button size="sm" variant="secondary" className="h-8 text-xs" onClick={() => setRemoteDevice(device)}>远程控制</Button>
+                      <Button size="sm" variant="secondary" className="h-8 text-xs" onClick={() => setEditDevice(device)}><Pencil className="h-3 w-3" /></Button>
                       <Button size="sm" variant="secondary" className="h-8 text-xs"><RotateCw className="h-3 w-3" /></Button>
-                      <Button size="sm" variant="secondary" className="h-8 text-xs"><Globe className="h-3 w-3" /></Button>
                     </div>
                   </div>
 
@@ -572,39 +276,32 @@ export default function Devices() {
                         <Badge variant="outline" className={st.className}>{st.label}</Badge>
                       </TableCell>
                       <TableCell className="text-sm">{device.region}</TableCell>
+                      <TableCell className="font-mono text-sm">{device.ip}</TableCell>
                       <TableCell>
-                        <IPSelector device={device} onIPChange={handleIPChange} />
+                        {device.boundAccounts.length > 0 ? (
+                          <div className="space-y-0.5">
+                            {device.boundAccounts.map((a, i) => (
+                              <div key={i} className="text-xs font-mono text-primary whitespace-nowrap">
+                                {a.platform}:{a.username}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
                       </TableCell>
-                      <TableCell>
-                        <AccountsEditor device={device} onAccountsChange={handleAccountsChange} />
+                      <TableCell className="text-sm">
+                        {[device.boundDepartment, device.boundEmployee].filter(Boolean).join(" / ") || "—"}
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <DeptEmployeeSelector
-                            value={[device.boundDepartment, device.boundEmployee].filter(Boolean).join(" / ")}
-                            onChange={(val) => handleBindChange(device.id, "boundDepartment", val)}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <DateTimeEditor
-                          value={device.bindTime || ""}
-                          onChange={(val) => handleDateChange(device.id, "bindTime", val)}
-                          label="绑定时间"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <DateTimeEditor
-                          value={device.expiryTime || ""}
-                          onChange={(val) => handleDateChange(device.id, "expiryTime", val)}
-                          label="到期时间"
-                        />
-                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">{device.bindTime || "—"}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">{device.expiryTime || "—"}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
+                          <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setEditDevice(device)}>
+                            <Pencil className="h-3 w-3 mr-1" />编辑
+                          </Button>
                           <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setRemoteDevice(device)}>控制</Button>
                           <Button size="sm" variant="ghost" className="h-7 px-2"><RotateCw className="h-3 w-3" /></Button>
-                          <Button size="sm" variant="ghost" className="h-7 px-2"><Globe className="h-3 w-3" /></Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -617,6 +314,7 @@ export default function Devices() {
       )}
 
       <RemoteControlDialog device={remoteDevice} open={!!remoteDevice} onOpenChange={(open) => { if (!open) setRemoteDevice(null); }} />
+      <DeviceEditDialog device={editDevice} open={!!editDevice} onOpenChange={(open) => { if (!open) setEditDevice(null); }} onSave={handleDeviceSave} />
     </div>
   );
 }
