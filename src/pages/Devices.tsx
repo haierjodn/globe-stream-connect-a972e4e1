@@ -50,8 +50,8 @@ export default function Devices() {
             return (
               <Card key={device.id} className="group hover:shadow-md transition-shadow">
                 <CardContent className="p-0">
-                  {/* Screenshot / Thumbnail */}
-                  <div className="aspect-video bg-muted/50 rounded-t-lg relative overflow-hidden">
+                  {/* Screenshot - portrait aspect ratio */}
+                  <div className="aspect-[9/16] max-h-[280px] bg-muted/30 rounded-t-lg relative overflow-hidden">
                     {device.screenshot ? (
                       <img
                         src={device.screenshot}
@@ -60,8 +60,16 @@ export default function Devices() {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Monitor className="h-10 w-10 text-muted-foreground/30" />
+                      <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-muted/20 to-muted/50">
+                        <div className="relative">
+                          <div className="w-16 h-24 rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                            <Monitor className="h-7 w-7 text-muted-foreground/25" />
+                          </div>
+                          <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-muted-foreground/10 flex items-center justify-center">
+                            <span className="text-[10px] text-muted-foreground/40">?</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground/40 tracking-wide">暂无截图</span>
                       </div>
                     )}
                     {/* Status indicator */}
