@@ -1,5 +1,10 @@
 // ============ MOCK DATA FOR ALL MODULES ============
-
+import screenshotVm001 from "@/assets/screenshot-vm001.jpg";
+import screenshotVm002 from "@/assets/screenshot-vm002.jpg";
+import screenshotVm003 from "@/assets/screenshot-vm003.jpg";
+import screenshotVm005 from "@/assets/screenshot-vm005.jpg";
+import screenshotVm007 from "@/assets/screenshot-vm007.jpg";
+import screenshotVm008 from "@/assets/screenshot-vm008.jpg";
 // Dashboard KPIs
 export const dashboardKPIs = {
   onlineDevices: 47,
@@ -49,14 +54,14 @@ export interface CloudDevice {
 }
 
 export const cloudDevices: CloudDevice[] = [
-  { id: "VM-001", name: "US-West-01", status: "online", ip: "192.168.1.101", region: "🇺🇸 洛杉矶", latency: 45, cpu: 32, memory: 48, boundAccount: "@fashionhub_us", screenshot: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=225&fit=crop" },
-  { id: "VM-002", name: "US-West-02", status: "online", ip: "192.168.1.102", region: "🇺🇸 洛杉矶", latency: 52, cpu: 65, memory: 72, boundAccount: "@beauty_deals", screenshot: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=225&fit=crop" },
-  { id: "VM-003", name: "UK-London-01", status: "online", ip: "10.0.2.55", region: "🇬🇧 伦敦", latency: 120, cpu: 18, memory: 35, boundAccount: "@uk_gadgets", screenshot: "https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?w=400&h=225&fit=crop" },
+  { id: "VM-001", name: "US-West-01", status: "online", ip: "192.168.1.101", region: "🇺🇸 洛杉矶", latency: 45, cpu: 32, memory: 48, boundAccount: "@fashionhub_us", screenshot: screenshotVm001 },
+  { id: "VM-002", name: "US-West-02", status: "online", ip: "192.168.1.102", region: "🇺🇸 洛杉矶", latency: 52, cpu: 65, memory: 72, boundAccount: "@beauty_deals", screenshot: screenshotVm002 },
+  { id: "VM-003", name: "UK-London-01", status: "online", ip: "10.0.2.55", region: "🇬🇧 伦敦", latency: 120, cpu: 18, memory: 35, boundAccount: "@uk_gadgets", screenshot: screenshotVm003 },
   { id: "VM-004", name: "JP-Tokyo-01", status: "offline", ip: "10.0.3.12", region: "🇯🇵 东京", latency: 0, cpu: 0, memory: 0 },
-  { id: "VM-005", name: "SG-01", status: "online", ip: "172.16.0.88", region: "🇸🇬 新加坡", latency: 85, cpu: 41, memory: 55, boundAccount: "@sg_lifestyle", screenshot: "https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=225&fit=crop" },
+  { id: "VM-005", name: "SG-01", status: "online", ip: "172.16.0.88", region: "🇸🇬 新加坡", latency: 85, cpu: 41, memory: 55, boundAccount: "@sg_lifestyle", screenshot: screenshotVm005 },
   { id: "VM-006", name: "DE-Frankfurt-01", status: "error", ip: "172.16.1.22", region: "🇩🇪 法兰克福", latency: 999, cpu: 98, memory: 95 },
-  { id: "VM-007", name: "US-East-01", status: "online", ip: "192.168.2.10", region: "🇺🇸 纽约", latency: 38, cpu: 55, memory: 60, boundAccount: "@nyc_trends", screenshot: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=400&h=225&fit=crop" },
-  { id: "VM-008", name: "AU-Sydney-01", status: "online", ip: "10.0.4.77", region: "🇦🇺 悉尼", latency: 165, cpu: 22, memory: 40, boundAccount: "@oz_store", screenshot: "https://images.unsplash.com/photo-1611162617263-4ec3060a058e?w=400&h=225&fit=crop" },
+  { id: "VM-007", name: "US-East-01", status: "online", ip: "192.168.2.10", region: "🇺🇸 纽约", latency: 38, cpu: 55, memory: 60, boundAccount: "@nyc_trends", screenshot: screenshotVm007 },
+  { id: "VM-008", name: "AU-Sydney-01", status: "online", ip: "10.0.4.77", region: "🇦🇺 悉尼", latency: 165, cpu: 22, memory: 40, boundAccount: "@oz_store", screenshot: screenshotVm008 },
 ];
 
 // IP Pool
