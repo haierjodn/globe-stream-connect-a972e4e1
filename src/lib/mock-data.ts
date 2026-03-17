@@ -70,20 +70,22 @@ export interface IPResource {
   address: string;
   type: "ISP住宅" | "数据中心" | "移动";
   purity: number;
-  status: "空闲" | "已绑定" | "冷却中";
+  status: "空闲" | "已绑定" | "冷却中" | "禁用";
   region: string;
   boundDevice?: string;
+  proxyServer?: string;
+  proxyExpiry?: string;
 }
 
 export const ipResources: IPResource[] = [
-  { id: "IP-001", address: "185.232.64.101", type: "ISP住宅", purity: 98, status: "已绑定", region: "🇺🇸 洛杉矶", boundDevice: "VM-001" },
-  { id: "IP-002", address: "185.232.64.102", type: "ISP住宅", purity: 95, status: "已绑定", region: "🇺🇸 洛杉矶", boundDevice: "VM-002" },
-  { id: "IP-003", address: "91.134.22.55", type: "ISP住宅", purity: 72, status: "冷却中", region: "🇬🇧 伦敦" },
-  { id: "IP-004", address: "103.21.88.12", type: "数据中心", purity: 88, status: "空闲", region: "🇯🇵 东京" },
-  { id: "IP-005", address: "45.77.120.88", type: "移动", purity: 99, status: "已绑定", region: "🇸🇬 新加坡", boundDevice: "VM-005" },
-  { id: "IP-006", address: "185.232.65.22", type: "ISP住宅", purity: 45, status: "冷却中", region: "🇩🇪 法兰克福" },
-  { id: "IP-007", address: "192.241.10.33", type: "数据中心", purity: 91, status: "已绑定", region: "🇺🇸 纽约", boundDevice: "VM-007" },
-  { id: "IP-008", address: "103.86.44.77", type: "ISP住宅", purity: 96, status: "已绑定", region: "🇦🇺 悉尼", boundDevice: "VM-008" },
+  { id: "IP-001", address: "185.232.64.101", type: "ISP住宅", purity: 98, status: "已绑定", region: "🇺🇸 洛杉矶", boundDevice: "VM-001", proxyServer: "proxy-us1.seaisee.com:8080", proxyExpiry: "2026-06-15" },
+  { id: "IP-002", address: "185.232.64.102", type: "ISP住宅", purity: 95, status: "已绑定", region: "🇺🇸 洛杉矶", boundDevice: "VM-002", proxyServer: "proxy-us2.seaisee.com:8080", proxyExpiry: "2026-05-20" },
+  { id: "IP-003", address: "91.134.22.55", type: "ISP住宅", purity: 72, status: "冷却中", region: "🇬🇧 伦敦", proxyServer: "proxy-uk1.seaisee.com:3128", proxyExpiry: "2026-04-10" },
+  { id: "IP-004", address: "103.21.88.12", type: "数据中心", purity: 88, status: "空闲", region: "🇯🇵 东京", proxyServer: "proxy-jp1.seaisee.com:1080", proxyExpiry: "2026-07-01" },
+  { id: "IP-005", address: "45.77.120.88", type: "移动", purity: 99, status: "已绑定", region: "🇸🇬 新加坡", boundDevice: "VM-005", proxyServer: "proxy-sg1.seaisee.com:8080", proxyExpiry: "2026-08-30" },
+  { id: "IP-006", address: "185.232.65.22", type: "ISP住宅", purity: 45, status: "禁用", region: "🇩🇪 法兰克福", proxyServer: "proxy-de1.seaisee.com:3128", proxyExpiry: "2026-03-01" },
+  { id: "IP-007", address: "192.241.10.33", type: "数据中心", purity: 91, status: "已绑定", region: "🇺🇸 纽约", boundDevice: "VM-007", proxyServer: "proxy-us3.seaisee.com:1080", proxyExpiry: "2026-09-15" },
+  { id: "IP-008", address: "103.86.44.77", type: "ISP住宅", purity: 96, status: "已绑定", region: "🇦🇺 悉尼", boundDevice: "VM-008", proxyServer: "proxy-au1.seaisee.com:8080", proxyExpiry: "2026-06-28" },
 ];
 
 // Social accounts
