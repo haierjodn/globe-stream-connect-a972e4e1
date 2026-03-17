@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +15,7 @@ import Nurture from "@/pages/Nurture";
 import Posting from "@/pages/Posting";
 import Analytics from "@/pages/Analytics";
 import Assets from "@/pages/Assets";
+import HandheldProductImage from "@/pages/HandheldProductImage";
 import AIScript from "@/pages/AIScript";
 import Editing from "@/pages/Editing";
 import Leads from "@/pages/Leads";
@@ -56,6 +57,7 @@ const App = () => (
               <Route path="/posting" element={<Posting />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/assets" element={<Assets />} />
+              <Route path="/assets/handheld-product" element={<HandheldProductImage />} />
               <Route path="/ai-script" element={<AIScript />} />
               <Route path="/editing" element={<Editing />} />
               <Route path="/leads" element={<Leads />} />
@@ -67,7 +69,6 @@ const App = () => (
               <Route path="/billing" element={<Billing />} />
               <Route path="/bandwidth-billing" element={<BandwidthBilling />} />
               <Route path="/audit" element={<Audit />} />
-              
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
