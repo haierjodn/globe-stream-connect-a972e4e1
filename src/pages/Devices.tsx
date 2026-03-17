@@ -161,7 +161,7 @@ export default function Devices() {
     });
   }, [devices, searchKeyword, filterStatus, filterRegion, filterDepartment]);
 
-  const hasFilters = searchKeyword || filterStatus !== "all" || filterPhoneStatus !== "all" || filterRegion !== "all" || filterDepartment !== "all";
+  const hasFilters = searchKeyword || filterStatus !== "all" || filterRegion !== "all" || filterDepartment !== "all";
 
   const clearFilters = () => {
     setSearchKeyword("");
