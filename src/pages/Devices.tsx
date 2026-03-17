@@ -56,7 +56,7 @@ export default function Devices() {
                       <img
                         src={device.screenshot}
                         alt={`${device.name} screenshot`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-center"
                         loading="lazy"
                       />
                     ) : (
