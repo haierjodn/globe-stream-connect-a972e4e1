@@ -81,12 +81,12 @@ export function RemoteControlDialog({ device, open, onOpenChange }: RemoteContro
         </div>
 
         {/* Body */}
-        <div className="flex bg-muted/30">
+        <div className="flex flex-1 bg-muted/30 overflow-hidden">
           {/* Phone screen */}
-          <div className="flex-1 flex flex-col items-center justify-center py-4 px-3">
+          <div className="flex-1 flex flex-col items-center justify-center py-5 px-4">
             <div
               className="relative rounded-lg border-2 border-foreground/10 bg-foreground/5 shadow-xl overflow-hidden"
-              style={{ width: "260px", height: "520px" }}
+              style={{ width: "340px", height: "calc(85vh - 140px)" }}
             >
               {!isConnected ? (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-background/80">
