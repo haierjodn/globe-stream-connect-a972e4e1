@@ -59,7 +59,7 @@ export function RemoteControlDialog({ device, open, onOpenChange }: RemoteContro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[520px] p-0 gap-0 overflow-hidden [&>button]:hidden">
+      <DialogContent className="max-w-[680px] h-[85vh] p-0 gap-0 overflow-hidden [&>button]:hidden flex flex-col">
         <DialogTitle className="sr-only">远程控制 - {device.name}</DialogTitle>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b bg-card">
