@@ -159,7 +159,7 @@ export default function Devices() {
       if (filterDepartment !== "all" && (d.boundDepartment || "") !== filterDepartment) return false;
       return true;
     });
-  }, [devices, searchKeyword, filterStatus, filterPhoneStatus, filterRegion, filterDepartment]);
+  }, [devices, searchKeyword, filterStatus, filterRegion, filterDepartment]);
 
   const hasFilters = searchKeyword || filterStatus !== "all" || filterPhoneStatus !== "all" || filterRegion !== "all" || filterDepartment !== "all";
 
