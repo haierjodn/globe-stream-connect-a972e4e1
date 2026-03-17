@@ -1,5 +1,10 @@
 // ============ MOCK DATA FOR ALL MODULES ============
-
+import screenshotVm001 from "@/assets/screenshot-vm001.jpg";
+import screenshotVm002 from "@/assets/screenshot-vm002.jpg";
+import screenshotVm003 from "@/assets/screenshot-vm003.jpg";
+import screenshotVm005 from "@/assets/screenshot-vm005.jpg";
+import screenshotVm007 from "@/assets/screenshot-vm007.jpg";
+import screenshotVm008 from "@/assets/screenshot-vm008.jpg";
 // Dashboard KPIs
 export const dashboardKPIs = {
   onlineDevices: 47,
