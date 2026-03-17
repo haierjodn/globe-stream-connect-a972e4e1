@@ -102,7 +102,7 @@ export function AppSidebar() {
         {navGroups.map((group) => {
           const groupActive = group.items.some((i) => location.pathname === i.url);
           return (
-            <Collapsible key={group.label} defaultOpen={groupActive || group.label === "概览"}>
+            <Collapsible key={group.label} defaultOpen>
               <SidebarGroup>
                 <CollapsibleTrigger className="w-full">
                   <SidebarGroupLabel className="flex items-center justify-between text-sidebar-muted uppercase text-[10px] tracking-widest">
