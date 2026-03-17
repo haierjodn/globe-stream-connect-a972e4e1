@@ -157,7 +157,7 @@ export default function RemoteControl() {
                   draggable={false}
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-b from-sky-400 to-teal-300 flex items-end justify-center pb-16">
+                <div className="w-full h-full bg-gradient-to-b from-primary/30 to-accent/40 flex items-end justify-center pb-16">
                   <div className="text-white/60 text-xs">实时画面</div>
                 </div>
               )}
