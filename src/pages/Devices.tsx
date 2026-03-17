@@ -138,6 +138,7 @@ function getUniqueValues<T>(arr: T[], getter: (item: T) => string): string[] {
 }
 
 export default function Devices() {
+  const navigate = useNavigate();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [devices, setDevices] = useState(cloudDevices);
 
