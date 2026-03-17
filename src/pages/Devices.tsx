@@ -297,7 +297,7 @@ export default function Devices() {
                       <Badge variant="outline" className={st.className + " text-[10px] backdrop-blur-sm"}>{st.label}</Badge>
                     </div>
                     <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <Button size="sm" variant="secondary" className="h-8 text-xs" onClick={() => navigate(`/remote-control?id=${device.id}`)}>远程控制</Button>
+                      <Button size="sm" variant="secondary" className="h-8 text-xs" onClick={() => setRemoteDevice(device)}>远程控制</Button>
                       <Button size="sm" variant="secondary" className="h-8 text-xs"><RotateCw className="h-3 w-3" /></Button>
                       <Button size="sm" variant="secondary" className="h-8 text-xs"><Globe className="h-3 w-3" /></Button>
                     </div>
