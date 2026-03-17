@@ -51,7 +51,7 @@ export default function Devices() {
               <Card key={device.id} className="group hover:shadow-md transition-shadow">
                 <CardContent className="p-0">
                   {/* Screenshot - portrait aspect ratio */}
-                  <div className="aspect-[9/16] max-h-[280px] bg-muted/30 rounded-t-lg relative overflow-hidden">
+                  <div className="aspect-[9/16] bg-muted/30 rounded-t-lg relative overflow-hidden">
                     {device.screenshot ? (
                       <img
                         src={device.screenshot}
