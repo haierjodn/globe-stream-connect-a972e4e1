@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { RemoteControlDialog } from "@/components/RemoteControlDialog";
 import { cloudDevices, orgTree, type CloudDevice, type OrgNode } from "@/lib/mock-data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
