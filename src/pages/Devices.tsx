@@ -335,7 +335,7 @@ export default function Devices() {
               <TableBody>
                 {filteredDevices.map((device) => {
                   const st = statusConfig[device.status];
-                  const ps = phoneStatusConfig[device.phoneStatus] || phoneStatusConfig["正常"];
+                  
                   return (
                     <TableRow key={device.id}>
                       <TableCell className="font-mono text-sm">{device.id}</TableCell>
