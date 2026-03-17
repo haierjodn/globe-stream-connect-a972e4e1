@@ -59,7 +59,7 @@ export function RemoteControlDialog({ device, open, onOpenChange }: RemoteContro
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[520px] p-0 gap-0 overflow-hidden [&>button]:hidden">
+      <DialogContent className="max-w-[680px] h-[85vh] p-0 gap-0 overflow-hidden [&>button]:hidden flex flex-col">
         <DialogTitle className="sr-only">远程控制 - {device.name}</DialogTitle>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b bg-card">
@@ -81,12 +81,12 @@ export function RemoteControlDialog({ device, open, onOpenChange }: RemoteContro
         </div>
 
         {/* Body */}
-        <div className="flex bg-muted/30">
+        <div className="flex flex-1 bg-muted/30 overflow-hidden">
           {/* Phone screen */}
-          <div className="flex-1 flex flex-col items-center justify-center py-4 px-3">
+          <div className="flex-1 flex flex-col items-center justify-center py-5 px-4">
             <div
               className="relative rounded-lg border-2 border-foreground/10 bg-foreground/5 shadow-xl overflow-hidden"
-              style={{ width: "260px", height: "520px" }}
+              style={{ width: "340px", height: "calc(85vh - 140px)" }}
             >
               {!isConnected ? (
                 <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-background/80">
