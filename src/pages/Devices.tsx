@@ -346,9 +346,6 @@ export default function Devices() {
                       <TableCell>
                         <Badge variant="outline" className={st.className}>{st.label}</Badge>
                       </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={ps.className}>{ps.label}</Badge>
-                      </TableCell>
                       <TableCell className="text-sm">{device.region}</TableCell>
                       <TableCell className="font-mono text-sm">{device.ip}</TableCell>
                       <TableCell>
