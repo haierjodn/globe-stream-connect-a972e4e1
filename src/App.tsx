@@ -68,6 +68,7 @@ const App = () => (
               <Route path="/billing" element={<Billing />} />
               <Route path="/bandwidth-billing" element={<BandwidthBilling />} />
               <Route path="/audit" element={<Audit />} />
+              <Route path="/remote-control" element={<RemoteControl />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
