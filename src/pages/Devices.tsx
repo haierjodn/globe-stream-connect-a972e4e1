@@ -154,7 +154,7 @@ export default function Devices() {
         if (!matchFields.includes(kw)) return false;
       }
       if (filterStatus !== "all" && d.status !== filterStatus) return false;
-      if (filterPhoneStatus !== "all" && d.phoneStatus !== filterPhoneStatus) return false;
+      
       if (filterRegion !== "all" && d.region !== filterRegion) return false;
       if (filterDepartment !== "all" && (d.boundDepartment || "") !== filterDepartment) return false;
       return true;
