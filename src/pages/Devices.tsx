@@ -139,7 +139,7 @@ export default function Devices() {
   // Filters
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [filterPhoneStatus, setFilterPhoneStatus] = useState("all");
+  
   const [filterRegion, setFilterRegion] = useState("all");
   const [filterDepartment, setFilterDepartment] = useState("all");
 
