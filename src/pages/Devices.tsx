@@ -322,7 +322,7 @@ export default function Devices() {
                   <TableHead className="w-[120px]">SN码</TableHead>
                   <TableHead>名称</TableHead>
                   <TableHead>设备状态</TableHead>
-                  <TableHead>手机状态</TableHead>
+                  
                   <TableHead>区域</TableHead>
                   <TableHead>IP</TableHead>
                   <TableHead>绑定账号</TableHead>
