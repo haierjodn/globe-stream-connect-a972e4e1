@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { cloudDevices, orgTree, type CloudDevice, type OrgNode } from "@/lib/mock-data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -137,6 +138,7 @@ function getUniqueValues<T>(arr: T[], getter: (item: T) => string): string[] {
 }
 
 export default function Devices() {
+  const navigate = useNavigate();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [devices, setDevices] = useState(cloudDevices);
 
@@ -295,7 +297,7 @@ export default function Devices() {
                       <Badge variant="outline" className={st.className + " text-[10px] backdrop-blur-sm"}>{st.label}</Badge>
                     </div>
                     <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <Button size="sm" variant="secondary" className="h-8 text-xs">远程控制</Button>
+                      <Button size="sm" variant="secondary" className="h-8 text-xs" onClick={() => navigate(`/remote-control?id=${device.id}`)}>远程控制</Button>
                       <Button size="sm" variant="secondary" className="h-8 text-xs"><RotateCw className="h-3 w-3" /></Button>
                       <Button size="sm" variant="secondary" className="h-8 text-xs"><Globe className="h-3 w-3" /></Button>
                     </div>
@@ -390,7 +392,7 @@ export default function Devices() {
                       <TableCell className="text-xs text-muted-foreground whitespace-nowrap">{device.expiryTime || "—"}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button size="sm" variant="ghost" className="h-7 text-xs">控制</Button>
+                          <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => navigate(`/remote-control?id=${device.id}`)}>控制</Button>
                           <Button size="sm" variant="ghost" className="h-7 px-2"><RotateCw className="h-3 w-3" /></Button>
                           <Button size="sm" variant="ghost" className="h-7 px-2"><Globe className="h-3 w-3" /></Button>
                         </div>
