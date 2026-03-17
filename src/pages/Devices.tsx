@@ -405,6 +405,8 @@ export default function Devices() {
           </div>
         </Card>
       )}
+
+      <RemoteControlDialog device={remoteDevice} open={!!remoteDevice} onOpenChange={(open) => { if (!open) setRemoteDevice(null); }} />
     </div>
   );
 }
