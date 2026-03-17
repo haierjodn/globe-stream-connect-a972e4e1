@@ -26,12 +26,6 @@ const statusConfig = {
   error: { label: "异常", className: "bg-destructive/10 text-destructive border-destructive/20" },
 };
 
-const phoneStatusConfig: Record<string, { label: string; className: string }> = {
-  "正常": { label: "正常", className: "bg-success/10 text-success border-success/20" },
-  "离线": { label: "离线", className: "bg-muted text-muted-foreground border-muted" },
-  "故障": { label: "故障", className: "bg-destructive/10 text-destructive border-destructive/20" },
-  "维护中": { label: "维护中", className: "bg-warning/10 text-warning border-warning/20" },
-};
 
 // ---- Inline editable name cell ----
 function EditableNameCell({ device, onNameChange }: { device: CloudDevice; onNameChange: (id: string, name: string) => void }) {
@@ -145,7 +139,7 @@ export default function Devices() {
   // Filters
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [filterPhoneStatus, setFilterPhoneStatus] = useState("all");
+  
   const [filterRegion, setFilterRegion] = useState("all");
   const [filterDepartment, setFilterDepartment] = useState("all");
 
@@ -160,19 +154,19 @@ export default function Devices() {
         if (!matchFields.includes(kw)) return false;
       }
       if (filterStatus !== "all" && d.status !== filterStatus) return false;
-      if (filterPhoneStatus !== "all" && d.phoneStatus !== filterPhoneStatus) return false;
+      
       if (filterRegion !== "all" && d.region !== filterRegion) return false;
       if (filterDepartment !== "all" && (d.boundDepartment || "") !== filterDepartment) return false;
       return true;
     });
-  }, [devices, searchKeyword, filterStatus, filterPhoneStatus, filterRegion, filterDepartment]);
+  }, [devices, searchKeyword, filterStatus, filterRegion, filterDepartment]);
 
-  const hasFilters = searchKeyword || filterStatus !== "all" || filterPhoneStatus !== "all" || filterRegion !== "all" || filterDepartment !== "all";
+  const hasFilters = searchKeyword || filterStatus !== "all" || filterRegion !== "all" || filterDepartment !== "all";
 
   const clearFilters = () => {
     setSearchKeyword("");
     setFilterStatus("all");
-    setFilterPhoneStatus("all");
+    
     setFilterRegion("all");
     setFilterDepartment("all");
   };
@@ -231,16 +225,6 @@ export default function Devices() {
             <SelectItem value="online">在线</SelectItem>
             <SelectItem value="offline">离线</SelectItem>
             <SelectItem value="error">异常</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filterPhoneStatus} onValueChange={setFilterPhoneStatus}>
-          <SelectTrigger className="w-[110px] h-9"><SelectValue placeholder="手机状态" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部</SelectItem>
-            <SelectItem value="正常">正常</SelectItem>
-            <SelectItem value="离线">离线</SelectItem>
-            <SelectItem value="故障">故障</SelectItem>
-            <SelectItem value="维护中">维护中</SelectItem>
           </SelectContent>
         </Select>
         <Select value={filterRegion} onValueChange={setFilterRegion}>
@@ -338,7 +322,7 @@ export default function Devices() {
                   <TableHead className="w-[120px]">SN码</TableHead>
                   <TableHead>名称</TableHead>
                   <TableHead>设备状态</TableHead>
-                  <TableHead>手机状态</TableHead>
+                  
                   <TableHead>区域</TableHead>
                   <TableHead>IP</TableHead>
                   <TableHead>绑定账号</TableHead>
@@ -351,7 +335,7 @@ export default function Devices() {
               <TableBody>
                 {filteredDevices.map((device) => {
                   const st = statusConfig[device.status];
-                  const ps = phoneStatusConfig[device.phoneStatus] || phoneStatusConfig["正常"];
+                  
                   return (
                     <TableRow key={device.id}>
                       <TableCell className="font-mono text-sm">{device.id}</TableCell>
@@ -361,9 +345,6 @@ export default function Devices() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className={st.className}>{st.label}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={ps.className}>{ps.label}</Badge>
                       </TableCell>
                       <TableCell className="text-sm">{device.region}</TableCell>
                       <TableCell className="font-mono text-sm">{device.ip}</TableCell>
