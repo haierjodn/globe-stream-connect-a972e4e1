@@ -392,7 +392,7 @@ export default function Devices() {
                       <TableCell className="text-xs text-muted-foreground whitespace-nowrap">{device.expiryTime || "—"}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button size="sm" variant="ghost" className="h-7 text-xs">控制</Button>
+                          <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => navigate(`/remote-control?id=${device.id}`)}>控制</Button>
                           <Button size="sm" variant="ghost" className="h-7 px-2"><RotateCw className="h-3 w-3" /></Button>
                           <Button size="sm" variant="ghost" className="h-7 px-2"><Globe className="h-3 w-3" /></Button>
                         </div>
