@@ -26,12 +26,6 @@ const statusConfig = {
   error: { label: "异常", className: "bg-destructive/10 text-destructive border-destructive/20" },
 };
 
-const phoneStatusConfig: Record<string, { label: string; className: string }> = {
-  "正常": { label: "正常", className: "bg-success/10 text-success border-success/20" },
-  "离线": { label: "离线", className: "bg-muted text-muted-foreground border-muted" },
-  "故障": { label: "故障", className: "bg-destructive/10 text-destructive border-destructive/20" },
-  "维护中": { label: "维护中", className: "bg-warning/10 text-warning border-warning/20" },
-};
 
 // ---- Inline editable name cell ----
 function EditableNameCell({ device, onNameChange }: { device: CloudDevice; onNameChange: (id: string, name: string) => void }) {
