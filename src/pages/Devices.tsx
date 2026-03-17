@@ -227,16 +227,6 @@ export default function Devices() {
             <SelectItem value="error">异常</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={filterPhoneStatus} onValueChange={setFilterPhoneStatus}>
-          <SelectTrigger className="w-[110px] h-9"><SelectValue placeholder="手机状态" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部</SelectItem>
-            <SelectItem value="正常">正常</SelectItem>
-            <SelectItem value="离线">离线</SelectItem>
-            <SelectItem value="故障">故障</SelectItem>
-            <SelectItem value="维护中">维护中</SelectItem>
-          </SelectContent>
-        </Select>
         <Select value={filterRegion} onValueChange={setFilterRegion}>
           <SelectTrigger className="w-[130px] h-9"><SelectValue placeholder="区域" /></SelectTrigger>
           <SelectContent>
