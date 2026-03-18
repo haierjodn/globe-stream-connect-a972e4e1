@@ -417,7 +417,12 @@ export default function Accounts() {
           <Button variant="outline" size="sm" onClick={() => setModifyTagOpen(true)}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
           <Button variant="outline" size="sm" onClick={() => setMoveGroupOpen(true)}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
           <Button variant="outline" size="sm" onClick={() => setGroupManageOpen(true)}><Settings className="h-3.5 w-3.5 mr-1" />分组管理</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><RefreshCw className="h-3.5 w-3.5 mr-1" />同步账号数据</Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="sm" onClick={() => setSyncConfirmOpen(true)}><RefreshCw className="h-3.5 w-3.5 mr-1" />同步账号数据</Button>
+            </TooltipTrigger>
+            <TooltipContent>因TikTok风控限制，每天最多只能同步2次数据。</TooltipContent>
+          </Tooltip>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Download className="h-3.5 w-3.5 mr-1" />导出作品数据</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
