@@ -239,6 +239,7 @@ export default function Accounts() {
   const [batchModifyOpen, setBatchModifyOpen] = useState(false);
   const [bindDeviceOpen, setBindDeviceOpen] = useState(false);
   const [assignUserOpen, setAssignUserOpen] = useState(false);
+  const [assignTenantOpen, setAssignTenantOpen] = useState(false);
   const noSelection = selectedIds.size === 0;
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
