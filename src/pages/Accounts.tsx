@@ -204,24 +204,40 @@ function AccountDetailDialog({ account, open, onOpenChange }: { account: SocialA
 // ── Main Page ──
 export default function Accounts() {
   const [accounts] = useState<SocialAccount[]>(socialAccounts);
-  const [search, setSearch] = useState("");
-  const [platformFilter, setPlatformFilter] = useState<string>("all");
+  const [accountFilter, setAccountFilter] = useState<string>("all");
+  const [deviceSearch, setDeviceSearch] = useState("");
+  const [groupFilter, setGroupFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [countryFilter, setCountryFilter] = useState<string>("all");
+  const [tagFilter, setTagFilter] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [addOpen, setAddOpen] = useState(false);
   const [detailAccount, setDetailAccount] = useState<SocialAccount | null>(null);
 
+  // Derived unique values for filters
+  const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
+  const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
+  const uniqueTags = useMemo(() => [...new Set(accounts.flatMap((a) => a.tags))], [accounts]);
+  const uniqueGroups = useMemo(() => [...new Set(accounts.map((a) => a.boundEmployee).filter(Boolean))], [accounts]);
+
   const filtered = useMemo(() => {
     return accounts.filter((a) => {
-      if (platformFilter !== "all" && a.platform !== platformFilter) return false;
+      if (accountFilter !== "all" && a.username !== accountFilter) return false;
       if (statusFilter !== "all" && a.status !== statusFilter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return a.username.toLowerCase().includes(q) || a.nickname.toLowerCase().includes(q) || a.boundEmployee.includes(q);
+      if (countryFilter !== "all" && a.region !== countryFilter) return false;
+      if (tagFilter !== "all" && !a.tags.includes(tagFilter)) return false;
+      if (groupFilter !== "all" && a.boundEmployee !== groupFilter) return false;
+      if (deviceSearch) {
+        const q = deviceSearch.toLowerCase();
+        if (!a.device.toLowerCase().includes(q)) return false;
       }
+      if (dateFrom && a.createdAt < dateFrom) return false;
+      if (dateTo && a.createdAt > dateTo) return false;
       return true;
     });
-  }, [accounts, search, platformFilter, statusFilter]);
+  }, [accounts, accountFilter, statusFilter, countryFilter, tagFilter, groupFilter, deviceSearch, dateFrom, dateTo]);
 
   // Stats
   const stats = useMemo(() => {
