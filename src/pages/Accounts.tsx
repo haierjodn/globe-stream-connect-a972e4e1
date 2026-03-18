@@ -17,6 +17,7 @@ import {
   AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video,
   RefreshCw, Download, Tag, FolderOpen, Settings, Play, EyeOff, ShoppingBag, FileText
 } from "lucide-react";
+import { PublishVideoDialog } from "@/components/PublishVideoDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
