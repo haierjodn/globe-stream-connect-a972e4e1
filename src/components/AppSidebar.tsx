@@ -29,8 +29,8 @@ const navGroups = [
     label: "设备与网络",
     items: [
       { title: "云机管理", url: "/devices", icon: Server },
-      { title: "IP资源池", url: "/ip-pool", icon: Globe },
-      { title: "带宽管理", url: "/bandwidth", icon: Wifi },
+      // { title: "IP资源池", url: "/ip-pool", icon: Globe },
+      // { title: "带宽管理", url: "/bandwidth", icon: Wifi },
     ],
   },
   {
