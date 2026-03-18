@@ -1,49 +1,390 @@
-import { socialAccounts } from "@/lib/mock-data";
+import { useState, useMemo } from "react";
+import { socialAccounts, SocialAccount, AccountPlatform } from "@/lib/mock-data";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import {
+  Search, Plus, MoreHorizontal, Edit2, Trash2, Eye, Users, Heart,
+  FileText, AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video
+} from "lucide-react";
 
-const statusConfig = {
-  "正常": "bg-success/10 text-success border-success/20",
-  "受限": "bg-warning/10 text-warning border-warning/20",
-  "封禁": "bg-destructive/10 text-destructive border-destructive/20",
+// ── Platform config ──
+const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
+  TikTok: { label: "TikTok", color: "bg-foreground/10 text-foreground border-foreground/20", icon: <Video className="h-3.5 w-3.5" /> },
+  Instagram: { label: "Instagram", color: "bg-pink-500/10 text-pink-600 border-pink-500/20", icon: <Instagram className="h-3.5 w-3.5" /> },
+  WhatsApp: { label: "WhatsApp", color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20", icon: <MessageCircle className="h-3.5 w-3.5" /> },
 };
 
-export default function Accounts() {
+const statusConfig: Record<string, { color: string; icon: React.ReactNode }> = {
+  "正常": { color: "bg-success/10 text-success border-success/20", icon: <CheckCircle2 className="h-3 w-3" /> },
+  "受限": { color: "bg-warning/10 text-warning border-warning/20", icon: <AlertTriangle className="h-3 w-3" /> },
+  "封禁": { color: "bg-destructive/10 text-destructive border-destructive/20", icon: <Ban className="h-3 w-3" /> },
+};
+
+function formatNumber(n: number): string {
+  if (n >= 10000) return (n / 10000).toFixed(1) + "w";
+  if (n >= 1000) return (n / 1000).toFixed(1) + "k";
+  return n.toString();
+}
+
+// ── Stats Card ──
+function StatCard({ label, value, icon, accent }: { label: string; value: string | number; icon: React.ReactNode; accent?: string }) {
   return (
-    <div className="space-y-6">
+    <Card className={`p-4 flex items-center gap-3 ${accent || ""}`}>
+      <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">{icon}</div>
+      <div>
+        <p className="text-2xl font-bold font-mono leading-none">{value}</p>
+        <p className="text-xs text-muted-foreground mt-1">{label}</p>
+      </div>
+    </Card>
+  );
+}
+
+// ── Add Account Dialog ──
+function AddAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [platform, setPlatform] = useState<AccountPlatform>("TikTok");
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader><DialogTitle>添加账号</DialogTitle></DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>所属平台</Label>
+            <Select value={platform} onValueChange={(v) => setPlatform(v as AccountPlatform)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(["TikTok", "Instagram", "WhatsApp"] as AccountPlatform[]).map((p) => (
+                  <SelectItem key={p} value={p}>
+                    <span className="flex items-center gap-2">{platformConfig[p].icon} {p}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>账号ID / 用户名</Label>
+              <Input placeholder={platform === "WhatsApp" ? "+1-xxx-xxx-xxxx" : "@username"} />
+            </div>
+            <div className="space-y-2">
+              <Label>昵称</Label>
+              <Input placeholder="输入昵称" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>绑定云机</Label>
+              <Select><SelectTrigger><SelectValue placeholder="选择云机" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="VM-001">VM-001 US-West-01</SelectItem>
+                  <SelectItem value="VM-002">VM-002 US-West-02</SelectItem>
+                  <SelectItem value="VM-003">VM-003 UK-London-01</SelectItem>
+                  <SelectItem value="VM-005">VM-005 SG-01</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>负责人</Label>
+              <Select><SelectTrigger><SelectValue placeholder="选择负责人" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="张伟">张伟</SelectItem>
+                  <SelectItem value="李娜">李娜</SelectItem>
+                  <SelectItem value="王芳">王芳</SelectItem>
+                  <SelectItem value="王磊">王磊</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>标签</Label>
+            <Input placeholder="输入标签，用逗号分隔" />
+          </div>
+          <div className="space-y-2">
+            <Label>备注</Label>
+            <Textarea placeholder="可选" rows={2} />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>取消</Button>
+          <Button onClick={() => { toast.success("账号已添加"); onOpenChange(false); }}>确认添加</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ── Account Detail Dialog ──
+function AccountDetailDialog({ account, open, onOpenChange }: { account: SocialAccount | null; open: boolean; onOpenChange: (v: boolean) => void }) {
+  if (!account) return null;
+  const pc = platformConfig[account.platform];
+  const sc = statusConfig[account.status];
+  const isWhatsApp = account.platform === "WhatsApp";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-2xl">
+        <DialogHeader><DialogTitle>账号详情</DialogTitle></DialogHeader>
+        <div className="space-y-6 py-2">
+          {/* Header */}
+          <div className="flex items-center gap-4">
+            <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center text-xl font-bold text-muted-foreground">
+              {account.nickname.charAt(0)}
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold">{account.nickname}</h3>
+                <Badge variant="outline" className={pc.color}>
+                  <span className="flex items-center gap-1">{pc.icon} {pc.label}</span>
+                </Badge>
+                <Badge variant="outline" className={sc.color}>
+                  <span className="flex items-center gap-1">{sc.icon} {account.status}</span>
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground font-mono mt-0.5">{account.username}</p>
+            </div>
+          </div>
+
+          {/* Stats */}
+          {!isWhatsApp && (
+            <div className="grid grid-cols-3 gap-3">
+              <Card className="p-3 text-center">
+                <p className="text-xl font-bold font-mono">{formatNumber(account.followers)}</p>
+                <p className="text-xs text-muted-foreground">粉丝</p>
+              </Card>
+              <Card className="p-3 text-center">
+                <p className="text-xl font-bold font-mono">{account.posts}</p>
+                <p className="text-xs text-muted-foreground">发帖</p>
+              </Card>
+              <Card className="p-3 text-center">
+                <p className="text-xl font-bold font-mono">{formatNumber(account.likes)}</p>
+                <p className="text-xs text-muted-foreground">获赞</p>
+              </Card>
+            </div>
+          )}
+
+          {/* Info Grid */}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+            <div className="flex justify-between"><span className="text-muted-foreground">绑定云机</span><span className="font-mono">{account.device}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">绑定IP</span><span className="font-mono text-xs">{account.ip}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">地区</span><span>{account.region}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">负责人</span><span>{account.boundEmployee}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">创建时间</span><span>{account.createdAt}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">最后活跃</span><span>{account.lastActive}</span></div>
+          </div>
+
+          {/* Tags */}
+          <div>
+            <p className="text-sm text-muted-foreground mb-2">标签</p>
+            <div className="flex gap-1.5 flex-wrap">
+              {account.tags.map((tag) => (
+                <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>关闭</Button>
+          <Button><Edit2 className="h-4 w-4 mr-1" />编辑</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ── Main Page ──
+export default function Accounts() {
+  const [accounts] = useState<SocialAccount[]>(socialAccounts);
+  const [search, setSearch] = useState("");
+  const [platformFilter, setPlatformFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [addOpen, setAddOpen] = useState(false);
+  const [detailAccount, setDetailAccount] = useState<SocialAccount | null>(null);
+
+  const filtered = useMemo(() => {
+    return accounts.filter((a) => {
+      if (platformFilter !== "all" && a.platform !== platformFilter) return false;
+      if (statusFilter !== "all" && a.status !== statusFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        return a.username.toLowerCase().includes(q) || a.nickname.toLowerCase().includes(q) || a.boundEmployee.includes(q);
+      }
+      return true;
+    });
+  }, [accounts, search, platformFilter, statusFilter]);
+
+  // Stats
+  const stats = useMemo(() => {
+    const total = accounts.length;
+    const normal = accounts.filter((a) => a.status === "正常").length;
+    const restricted = accounts.filter((a) => a.status === "受限").length;
+    const banned = accounts.filter((a) => a.status === "封禁").length;
+    return { total, normal, restricted, banned };
+  }, [accounts]);
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+  const toggleAll = () => {
+    if (selectedIds.size === filtered.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filtered.map((a) => a.id)));
+    }
+  };
+
+  return (
+    <div className="space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">账号管理</h1>
-        <Button>+ 添加账号</Button>
+        <Button onClick={() => setAddOpen(true)}><Plus className="h-4 w-4 mr-1" />添加账号</Button>
       </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-4">
+        <StatCard label="总账号数" value={stats.total} icon={<Users className="h-5 w-5 text-primary" />} />
+        <StatCard label="正常" value={stats.normal} icon={<CheckCircle2 className="h-5 w-5 text-success" />} />
+        <StatCard label="受限" value={stats.restricted} icon={<AlertTriangle className="h-5 w-5 text-warning" />} />
+        <StatCard label="封禁" value={stats.banned} icon={<Ban className="h-5 w-5 text-destructive" />} />
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <Tabs value={platformFilter} onValueChange={setPlatformFilter}>
+          <TabsList>
+            <TabsTrigger value="all">全部平台</TabsTrigger>
+            <TabsTrigger value="TikTok" className="gap-1"><Video className="h-3.5 w-3.5" />TikTok</TabsTrigger>
+            <TabsTrigger value="Instagram" className="gap-1"><Instagram className="h-3.5 w-3.5" />Instagram</TabsTrigger>
+            <TabsTrigger value="WhatsApp" className="gap-1"><MessageCircle className="h-3.5 w-3.5" />WhatsApp</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-28"><SelectValue placeholder="状态" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">全部状态</SelectItem>
+            <SelectItem value="正常">正常</SelectItem>
+            <SelectItem value="受限">受限</SelectItem>
+            <SelectItem value="封禁">封禁</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="搜索账号 / 昵称 / 负责人" className="pl-8" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        {selectedIds.size > 0 && (
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-sm text-muted-foreground">已选 {selectedIds.size} 项</span>
+            <Button variant="outline" size="sm">批量编辑</Button>
+            <Button variant="destructive" size="sm">批量删除</Button>
+          </div>
+        )}
+      </div>
+
+      {/* Table */}
       <div className="rounded-lg border bg-card">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-10">
+                <Checkbox
+                  checked={filtered.length > 0 && selectedIds.size === filtered.length}
+                  onCheckedChange={toggleAll}
+                />
+              </TableHead>
               <TableHead>账号</TableHead>
+              <TableHead>平台</TableHead>
               <TableHead>状态</TableHead>
-              <TableHead>粉丝数</TableHead>
-              <TableHead>发帖数</TableHead>
+              <TableHead>粉丝</TableHead>
+              <TableHead>发帖</TableHead>
               <TableHead>绑定云机</TableHead>
-              <TableHead>绑定IP</TableHead>
+              <TableHead>地区</TableHead>
+              <TableHead>负责人</TableHead>
               <TableHead>最后活跃</TableHead>
+              <TableHead className="w-12">操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {socialAccounts.map((acc) => (
-              <TableRow key={acc.id}>
-                <TableCell className="font-mono font-medium">{acc.username}</TableCell>
-                <TableCell><Badge variant="outline" className={statusConfig[acc.status]}>{acc.status}</Badge></TableCell>
-                <TableCell className="font-mono">{acc.followers.toLocaleString()}</TableCell>
-                <TableCell className="font-mono">{acc.posts}</TableCell>
-                <TableCell className="font-mono text-muted-foreground">{acc.device}</TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground">{acc.ip}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{acc.lastActive}</TableCell>
+            {filtered.map((acc) => {
+              const pc = platformConfig[acc.platform];
+              const sc = statusConfig[acc.status];
+              return (
+                <TableRow key={acc.id} className="group cursor-pointer" onClick={() => setDetailAccount(acc)}>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <Checkbox checked={selectedIds.has(acc.id)} onCheckedChange={() => toggleSelect(acc.id)} />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground shrink-0">
+                        {acc.nickname.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm leading-tight">{acc.nickname}</p>
+                        <p className="text-xs text-muted-foreground font-mono">{acc.username}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={pc.color}>
+                      <span className="flex items-center gap-1">{pc.icon} {pc.label}</span>
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={sc.color}>
+                      <span className="flex items-center gap-1">{sc.icon} {acc.status}</span>
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="font-mono text-sm">{acc.platform === "WhatsApp" ? "—" : formatNumber(acc.followers)}</TableCell>
+                  <TableCell className="font-mono text-sm">{acc.platform === "WhatsApp" ? "—" : acc.posts}</TableCell>
+                  <TableCell className="font-mono text-muted-foreground text-sm">{acc.device}</TableCell>
+                  <TableCell className="text-sm">{acc.region}</TableCell>
+                  <TableCell className="text-sm">{acc.boundEmployee}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{acc.lastActive}</TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setDetailAccount(acc)}><Eye className="h-4 w-4 mr-2" />查看详情</DropdownMenuItem>
+                        <DropdownMenuItem><Edit2 className="h-4 w-4 mr-2" />编辑</DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive"><Trash2 className="h-4 w-4 mr-2" />删除</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={11} className="text-center text-muted-foreground py-12">
+                  暂无匹配的账号数据
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
+
+      {/* Dialogs */}
+      <AddAccountDialog open={addOpen} onOpenChange={setAddOpen} />
+      <AccountDetailDialog account={detailAccount} open={!!detailAccount} onOpenChange={(v) => !v && setDetailAccount(null)} />
     </div>
   );
 }
