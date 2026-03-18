@@ -29,6 +29,7 @@ import { AddTapProductDialog } from "@/components/AddTapProductDialog";
 import { BatchModifyTagGroupDialog } from "@/components/BatchModifyTagGroupDialog";
 import { BindDeviceDialog } from "@/components/BindDeviceDialog";
 import { AssignUserDialog } from "@/components/AssignUserDialog";
+import { AssignTenantDialog } from "@/components/AssignTenantDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
