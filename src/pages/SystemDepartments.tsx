@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronRight, ChevronDown, Plus, Pencil, Trash2, ChevronsUpDown, Search, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
@@ -69,6 +69,9 @@ export default function SystemDepartments() {
   const [formSort, setFormSort] = useState("0");
   const [formStatus, setFormStatus] = useState<"正常" | "停用">("正常");
   const [formParent, setFormParent] = useState<string>("none");
+  const [formLeader, setFormLeader] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formEmail, setFormEmail] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingDept, setDeletingDept] = useState<DeptNode | null>(null);
   const [allExpanded, setAllExpanded] = useState(true);
@@ -104,6 +107,9 @@ export default function SystemDepartments() {
     setFormSort("0");
     setFormStatus("正常");
     setFormParent(parentId || "none");
+    setFormLeader("");
+    setFormPhone("");
+    setFormEmail("");
     setDialogOpen(true);
   };
 
@@ -114,6 +120,9 @@ export default function SystemDepartments() {
     setFormSort(String(dept.sort));
     setFormStatus(dept.status);
     setFormParent(dept.parentId || "none");
+    setFormLeader("");
+    setFormPhone("");
+    setFormEmail("");
     setDialogOpen(true);
   };
 
@@ -278,47 +287,61 @@ export default function SystemDepartments() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editingDept ? "编辑部门" : "添加部门"}</DialogTitle>
+            <DialogTitle>{editingDept ? "编辑" : "新增"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            {!editingDept && (
-              <div className="space-y-2">
-                <Label>上级部门</Label>
-                <Select value={formParent} onValueChange={setFormParent}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">无（顶级部门）</SelectItem>
-                    {allDepts.map(d => <SelectItem key={d.id} value={d.id}>{d.label}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label>部门名称</Label>
-              <Input value={formName} onChange={e => setFormName(e.target.value)} placeholder="请输入部门名称" />
+          <div className="space-y-5">
+            {/* 上级部门 - always shown */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0"><span className="text-destructive">*</span> 上级部门</Label>
+              <Select value={formParent} onValueChange={setFormParent}>
+                <SelectTrigger className="flex-1"><SelectValue placeholder="请选择" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">无（顶级部门）</SelectItem>
+                  {allDepts.map(d => <SelectItem key={d.id} value={d.id}>{d.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>排序</Label>
-                <Input type="number" value={formSort} onChange={e => setFormSort(e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label>状态</Label>
-                <Select value={formStatus} onValueChange={v => setFormStatus(v as "正常" | "停用")}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="正常">正常</SelectItem>
-                    <SelectItem value="停用">停用</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* 部门 + 显示顺序 */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0"><span className="text-destructive">*</span> 部门</Label>
+              <Input className="flex-1" value={formName} onChange={e => setFormName(e.target.value)} placeholder="请输入部门名称" />
+              <Label className="w-20 text-right shrink-0"><span className="text-destructive">*</span> 显示顺序</Label>
+              <Input type="number" className="w-28" value={formSort} onChange={e => setFormSort(e.target.value)} />
+            </div>
+            {/* 负责人 + 联系电话 */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0">负责人</Label>
+              <Select value={formLeader} onValueChange={setFormLeader}>
+                <SelectTrigger className="flex-1"><SelectValue placeholder="请选择" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">请选择</SelectItem>
+                </SelectContent>
+              </Select>
+              <Label className="w-20 text-right shrink-0">联系电话</Label>
+              <Input className="flex-1" value={formPhone} onChange={e => setFormPhone(e.target.value)} placeholder="请输入联系电话" />
+            </div>
+            {/* 邮箱 + 部门状态 */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0">邮箱</Label>
+              <Input className="flex-1" value={formEmail} onChange={e => setFormEmail(e.target.value)} placeholder="请输入邮箱" />
+              <Label className="w-20 text-right shrink-0">部门状态</Label>
+              <RadioGroup value={formStatus} onValueChange={v => setFormStatus(v as "正常" | "停用")} className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="正常" id="status-normal" />
+                  <Label htmlFor="status-normal" className="text-sm font-normal text-primary cursor-pointer">正常</Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="停用" id="status-disabled" />
+                  <Label htmlFor="status-disabled" className="text-sm font-normal cursor-pointer">停用</Label>
+                </div>
+              </RadioGroup>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>取消</Button>
-            <Button onClick={handleSave}>确定</Button>
+            <Button onClick={handleSave}>确 定</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>取 消</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
