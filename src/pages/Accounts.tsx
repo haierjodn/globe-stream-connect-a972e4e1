@@ -26,6 +26,7 @@ import { ModifyTagDialog } from "@/components/ModifyTagDialog";
 import { MoveGroupDialog } from "@/components/MoveGroupDialog";
 import { GroupManageDialog } from "@/components/GroupManageDialog";
 import { AddTapProductDialog } from "@/components/AddTapProductDialog";
+import { BatchModifyTagGroupDialog } from "@/components/BatchModifyTagGroupDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
@@ -232,6 +233,7 @@ export default function Accounts() {
   const [groupManageOpen, setGroupManageOpen] = useState(false);
   const [syncConfirmOpen, setSyncConfirmOpen] = useState(false);
   const [tapProductOpen, setTapProductOpen] = useState(false);
+  const [batchModifyOpen, setBatchModifyOpen] = useState(false);
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
@@ -427,7 +429,7 @@ export default function Accounts() {
           </Tooltip>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Download className="h-3.5 w-3.5 mr-1" />导出作品数据</Button>
           <Button variant="outline" size="sm" onClick={() => setTapProductOpen(true)}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
+          <Button variant="outline" size="sm" onClick={() => setBatchModifyOpen(true)}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Monitor className="h-3.5 w-3.5 mr-1" />绑定云机</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><UserPlus className="h-3.5 w-3.5 mr-1" />分配给用户</Button>
         </div>
@@ -554,6 +556,7 @@ export default function Accounts() {
         </AlertDialogContent>
       </AlertDialog>
       <AddTapProductDialog open={tapProductOpen} onOpenChange={setTapProductOpen} selectedCount={selectedIds.size} />
+      <BatchModifyTagGroupDialog open={batchModifyOpen} onOpenChange={setBatchModifyOpen} />
     </div>
   );
 }
