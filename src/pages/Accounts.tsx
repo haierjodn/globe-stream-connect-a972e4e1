@@ -21,6 +21,8 @@ import { PublishVideoDialog } from "@/components/PublishVideoDialog";
 import { AutoNurtureDialog } from "@/components/AutoNurtureDialog";
 import { HideVideoDialog } from "@/components/HideVideoDialog";
 import { ModifyTagDialog } from "@/components/ModifyTagDialog";
+import { MoveGroupDialog } from "@/components/MoveGroupDialog";
+import { GroupManageDialog } from "@/components/GroupManageDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
