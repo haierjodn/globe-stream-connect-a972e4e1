@@ -42,16 +42,16 @@ const navGroups = [
       { title: "数据看板", url: "/analytics", icon: BarChart3 },
     ],
   },
-  {
-    label: "AI视频创作",
-    items: [
-      { title: "素材中心", url: "/assets", icon: Video },
-      { title: "AI脚本", url: "/ai-script", icon: FileText },
-      { title: "智能剪辑", url: "/editing", icon: Scissors },
-    ],
-  },
-  {
-    label: "获客CRM",
+  // {
+  //   label: "AI视频创作",
+  //   items: [
+  //     { title: "素材中心", url: "/assets", icon: Video },
+  //     { title: "AI脚本", url: "/ai-script", icon: FileText },
+  //     { title: "智能剪辑", url: "/editing", icon: Scissors },
+  //   ],
+  // },
+  // {
+  //   label: "获客CRM",
     items: [
       { title: "线索管理", url: "/leads", icon: Target },
       { title: "海关数据", url: "/customs", icon: Database },
