@@ -42,30 +42,30 @@ const navGroups = [
       { title: "数据看板", url: "/analytics", icon: BarChart3 },
     ],
   },
-  {
-    label: "AI视频创作",
-    items: [
-      { title: "素材中心", url: "/assets", icon: Video },
-      { title: "AI脚本", url: "/ai-script", icon: FileText },
-      { title: "智能剪辑", url: "/editing", icon: Scissors },
-    ],
-  },
-  {
-    label: "获客CRM",
-    items: [
-      { title: "线索管理", url: "/leads", icon: Target },
-      { title: "海关数据", url: "/customs", icon: Database },
-      { title: "公海池", url: "/pool", icon: Inbox },
-    ],
-  },
-  {
-    label: "租户管理",
-    items: [
-      { title: "组织架构", url: "/org", icon: Users },
-      { title: "角色权限", url: "/roles", icon: Shield },
-      { title: "租户配置", url: "/tenant-config", icon: Settings },
-    ],
-  },
+  // {
+  //   label: "AI视频创作",
+  //   items: [
+  //     { title: "素材中心", url: "/assets", icon: Video },
+  //     { title: "AI脚本", url: "/ai-script", icon: FileText },
+  //     { title: "智能剪辑", url: "/editing", icon: Scissors },
+  //   ],
+  // },
+  // {
+  //   label: "获客CRM",
+  //   items: [
+  //     { title: "线索管理", url: "/leads", icon: Target },
+  //     { title: "海关数据", url: "/customs", icon: Database },
+  //     { title: "公海池", url: "/pool", icon: Inbox },
+  //   ],
+  // },
+  // {
+  //   label: "租户管理",
+  //   items: [
+  //     { title: "组织架构", url: "/org", icon: Users },
+  //     { title: "角色权限", url: "/roles", icon: Shield },
+  //     { title: "租户配置", url: "/tenant-config", icon: Settings },
+  //   ],
+  // },
   {
     label: "系统管理",
     items: [
