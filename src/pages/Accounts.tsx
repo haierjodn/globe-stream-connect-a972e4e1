@@ -536,6 +536,21 @@ export default function Accounts() {
       <ModifyTagDialog open={modifyTagOpen} onOpenChange={setModifyTagOpen} />
       <MoveGroupDialog open={moveGroupOpen} onOpenChange={setMoveGroupOpen} />
       <GroupManageDialog open={groupManageOpen} onOpenChange={setGroupManageOpen} />
+      <AlertDialog open={syncConfirmOpen} onOpenChange={setSyncConfirmOpen}>
+        <AlertDialogContent className="max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>提示</AlertDialogTitle>
+            <AlertDialogDescription className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-warning shrink-0" />
+              确定同步账号数据吗？
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={() => toast.success("账号数据同步已开始")}>确认</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
