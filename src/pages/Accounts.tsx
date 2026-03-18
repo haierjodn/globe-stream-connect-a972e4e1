@@ -8,14 +8,14 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
-  Search, Plus, MoreHorizontal, Edit2, Trash2, Eye, Users, Heart,
-  FileText, AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video
+  Plus, MoreHorizontal, Edit2, Trash2, Eye, Users,
+  AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video
 } from "lucide-react";
 
 // ── Platform config ──
@@ -204,24 +204,40 @@ function AccountDetailDialog({ account, open, onOpenChange }: { account: SocialA
 // ── Main Page ──
 export default function Accounts() {
   const [accounts] = useState<SocialAccount[]>(socialAccounts);
-  const [search, setSearch] = useState("");
-  const [platformFilter, setPlatformFilter] = useState<string>("all");
+  const [accountFilter, setAccountFilter] = useState<string>("all");
+  const [deviceSearch, setDeviceSearch] = useState("");
+  const [groupFilter, setGroupFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [countryFilter, setCountryFilter] = useState<string>("all");
+  const [tagFilter, setTagFilter] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [addOpen, setAddOpen] = useState(false);
   const [detailAccount, setDetailAccount] = useState<SocialAccount | null>(null);
 
+  // Derived unique values for filters
+  const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
+  const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
+  const uniqueTags = useMemo(() => [...new Set(accounts.flatMap((a) => a.tags))], [accounts]);
+  const uniqueGroups = useMemo(() => [...new Set(accounts.map((a) => a.boundEmployee).filter(Boolean))], [accounts]);
+
   const filtered = useMemo(() => {
     return accounts.filter((a) => {
-      if (platformFilter !== "all" && a.platform !== platformFilter) return false;
+      if (accountFilter !== "all" && a.username !== accountFilter) return false;
       if (statusFilter !== "all" && a.status !== statusFilter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return a.username.toLowerCase().includes(q) || a.nickname.toLowerCase().includes(q) || a.boundEmployee.includes(q);
+      if (countryFilter !== "all" && a.region !== countryFilter) return false;
+      if (tagFilter !== "all" && !a.tags.includes(tagFilter)) return false;
+      if (groupFilter !== "all" && a.boundEmployee !== groupFilter) return false;
+      if (deviceSearch) {
+        const q = deviceSearch.toLowerCase();
+        if (!a.device.toLowerCase().includes(q)) return false;
       }
+      if (dateFrom && a.createdAt < dateFrom) return false;
+      if (dateTo && a.createdAt > dateTo) return false;
       return true;
     });
-  }, [accounts, search, platformFilter, statusFilter]);
+  }, [accounts, accountFilter, statusFilter, countryFilter, tagFilter, groupFilter, deviceSearch, dateFrom, dateTo]);
 
   // Stats
   const stats = useMemo(() => {
@@ -263,31 +279,81 @@ export default function Accounts() {
         <StatCard label="封禁" value={stats.banned} icon={<Ban className="h-5 w-5 text-destructive" />} />
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <Tabs value={platformFilter} onValueChange={setPlatformFilter}>
-          <TabsList>
-            <TabsTrigger value="all">全部平台</TabsTrigger>
-            <TabsTrigger value="TikTok" className="gap-1"><Video className="h-3.5 w-3.5" />TikTok</TabsTrigger>
-            <TabsTrigger value="Instagram" className="gap-1"><Instagram className="h-3.5 w-3.5" />Instagram</TabsTrigger>
-            <TabsTrigger value="WhatsApp" className="gap-1"><MessageCircle className="h-3.5 w-3.5" />WhatsApp</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-28"><SelectValue placeholder="状态" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部状态</SelectItem>
-            <SelectItem value="正常">正常</SelectItem>
-            <SelectItem value="受限">受限</SelectItem>
-            <SelectItem value="封禁">封禁</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="搜索账号 / 昵称 / 负责人" className="pl-8" value={search} onChange={(e) => setSearch(e.target.value)} />
+      {/* Filters - 3 col grid matching reference */}
+      <div className="rounded-lg border bg-card p-4 space-y-3">
+        <div className="grid grid-cols-3 gap-x-6 gap-y-3">
+          {/* Row 1 */}
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">账号</Label>
+            <Select value={accountFilter} onValueChange={setAccountFilter}>
+              <SelectTrigger><SelectValue placeholder="全部" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                {uniqueAccounts.map((u) => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">手机编号</Label>
+            <Input placeholder="请输入手机编号" value={deviceSearch} onChange={(e) => setDeviceSearch(e.target.value)} />
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">分组</Label>
+            <Select value={groupFilter} onValueChange={setGroupFilter}>
+              <SelectTrigger><SelectValue placeholder="全部" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                {uniqueGroups.map((g) => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Row 2 */}
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">账号状态</Label>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger><SelectValue placeholder="全部" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                <SelectItem value="正常">正常</SelectItem>
+                <SelectItem value="受限">受限</SelectItem>
+                <SelectItem value="封禁">封禁</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">国家</Label>
+            <Select value={countryFilter} onValueChange={setCountryFilter}>
+              <SelectTrigger><SelectValue placeholder="全部" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                {uniqueCountries.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">标签</Label>
+            <Select value={tagFilter} onValueChange={setTagFilter}>
+              <SelectTrigger><SelectValue placeholder="全部" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                {uniqueTags.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Row 3 */}
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">发布时间</Label>
+            <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="flex-1" />
+            <span className="text-muted-foreground text-sm">~</span>
+            <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="flex-1" />
+          </div>
         </div>
+
+        {/* Batch actions */}
         {selectedIds.size > 0 && (
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2 pt-2 border-t">
             <span className="text-sm text-muted-foreground">已选 {selectedIds.size} 项</span>
             <Button variant="outline" size="sm">批量编辑</Button>
             <Button variant="destructive" size="sm">批量删除</Button>
