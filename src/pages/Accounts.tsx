@@ -8,14 +8,14 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
-  Plus, MoreHorizontal, Edit2, Trash2, Eye, Users,
-  AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video
+  Plus, MoreHorizontal, Edit2, Trash2, Eye, Users, Upload,
+  AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video,
+  RefreshCw, Download, Tag, FolderOpen, Settings, Play, EyeOff, ShoppingBag, FileText
 } from "lucide-react";
 
 // ── Platform config ──
@@ -38,9 +38,9 @@ function formatNumber(n: number): string {
 }
 
 // ── Stats Card ──
-function StatCard({ label, value, icon, accent }: { label: string; value: string | number; icon: React.ReactNode; accent?: string }) {
+function StatCard({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
-    <Card className={`p-4 flex items-center gap-3 ${accent || ""}`}>
+    <Card className="p-4 flex items-center gap-3">
       <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">{icon}</div>
       <div>
         <p className="text-2xl font-bold font-mono leading-none">{value}</p>
@@ -58,40 +58,29 @@ function AddAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
       <DialogContent className="sm:max-w-lg">
         <DialogHeader><DialogTitle>添加账号</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
-          <div className="space-y-2">
-            <Label>所属平台</Label>
-            <Select value={platform} onValueChange={(v) => setPlatform(v as AccountPlatform)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {(["TikTok", "Instagram", "WhatsApp"] as AccountPlatform[]).map((p) => (
-                  <SelectItem key={p} value={p}>
-                    <span className="flex items-center gap-2">{platformConfig[p].icon} {p}</span>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
           <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>所属平台</Label>
+              <Select value={platform} onValueChange={(v) => setPlatform(v as AccountPlatform)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {(["TikTok", "Instagram", "WhatsApp"] as AccountPlatform[]).map((p) => (
+                    <SelectItem key={p} value={p}>
+                      <span className="flex items-center gap-2">{platformConfig[p].icon} {p}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label>账号ID / 用户名</Label>
               <Input placeholder={platform === "WhatsApp" ? "+1-xxx-xxx-xxxx" : "@username"} />
             </div>
-            <div className="space-y-2">
-              <Label>昵称</Label>
-              <Input placeholder="输入昵称" />
-            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>绑定云机</Label>
-              <Select><SelectTrigger><SelectValue placeholder="选择云机" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="VM-001">VM-001 US-West-01</SelectItem>
-                  <SelectItem value="VM-002">VM-002 US-West-02</SelectItem>
-                  <SelectItem value="VM-003">VM-003 UK-London-01</SelectItem>
-                  <SelectItem value="VM-005">VM-005 SG-01</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>昵称</Label>
+              <Input placeholder="输入昵称" />
             </div>
             <div className="space-y-2">
               <Label>负责人</Label>
@@ -105,9 +94,20 @@ function AddAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
               </Select>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>标签</Label>
-            <Input placeholder="输入标签，用逗号分隔" />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>分组</Label>
+              <Select><SelectTrigger><SelectValue placeholder="选择分组" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="A">A</SelectItem>
+                  <SelectItem value="默认分组">默认分组</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>标签</Label>
+              <Input placeholder="输入标签，用逗号分隔" />
+            </div>
           </div>
           <div className="space-y-2">
             <Label>备注</Label>
@@ -128,14 +128,12 @@ function AccountDetailDialog({ account, open, onOpenChange }: { account: SocialA
   if (!account) return null;
   const pc = platformConfig[account.platform];
   const sc = statusConfig[account.status];
-  const isWhatsApp = account.platform === "WhatsApp";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader><DialogTitle>账号详情</DialogTitle></DialogHeader>
         <div className="space-y-6 py-2">
-          {/* Header */}
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center text-xl font-bold text-muted-foreground">
               {account.nickname.charAt(0)}
@@ -154,35 +152,36 @@ function AccountDetailDialog({ account, open, onOpenChange }: { account: SocialA
             </div>
           </div>
 
-          {/* Stats */}
-          {!isWhatsApp && (
-            <div className="grid grid-cols-3 gap-3">
-              <Card className="p-3 text-center">
-                <p className="text-xl font-bold font-mono">{formatNumber(account.followers)}</p>
-                <p className="text-xs text-muted-foreground">粉丝</p>
-              </Card>
-              <Card className="p-3 text-center">
-                <p className="text-xl font-bold font-mono">{account.posts}</p>
-                <p className="text-xs text-muted-foreground">发帖</p>
-              </Card>
-              <Card className="p-3 text-center">
-                <p className="text-xl font-bold font-mono">{formatNumber(account.likes)}</p>
-                <p className="text-xs text-muted-foreground">获赞</p>
-              </Card>
-            </div>
-          )}
+          <div className="grid grid-cols-4 gap-3">
+            <Card className="p-3 text-center">
+              <p className="text-xl font-bold font-mono">{formatNumber(account.followers)}</p>
+              <p className="text-xs text-muted-foreground">粉丝</p>
+            </Card>
+            <Card className="p-3 text-center">
+              <p className="text-xl font-bold font-mono">{account.following}</p>
+              <p className="text-xs text-muted-foreground">关注</p>
+            </Card>
+            <Card className="p-3 text-center">
+              <p className="text-xl font-bold font-mono">{formatNumber(account.likes)}</p>
+              <p className="text-xs text-muted-foreground">点赞</p>
+            </Card>
+            <Card className="p-3 text-center">
+              <p className="text-xl font-bold font-mono">{formatNumber(account.views)}</p>
+              <p className="text-xs text-muted-foreground">播放量</p>
+            </Card>
+          </div>
 
-          {/* Info Grid */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-muted-foreground">绑定云机</span><span className="font-mono">{account.device}</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">绑定IP</span><span className="font-mono text-xs">{account.ip}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">绑定云机</span><span className="font-mono">{account.device || "—"}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">绑定IP</span><span className="font-mono text-xs">{account.ip || "—"}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">地区</span><span>{account.region}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">负责人</span><span>{account.boundEmployee}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">分组</span><span>{account.group}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">绑定状态</span><span>{account.bindStatus}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">创建时间</span><span>{account.createdAt}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">最后活跃</span><span>{account.lastActive}</span></div>
           </div>
 
-          {/* Tags */}
           <div>
             <p className="text-sm text-muted-foreground mb-2">标签</p>
             <div className="flex gap-1.5 flex-wrap">
@@ -207,6 +206,7 @@ export default function Accounts() {
   const [accountFilter, setAccountFilter] = useState<string>("all");
   const [deviceSearch, setDeviceSearch] = useState("");
   const [groupFilter, setGroupFilter] = useState<string>("all");
+  const [platformFilter, setPlatformFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [countryFilter, setCountryFilter] = useState<string>("all");
   const [tagFilter, setTagFilter] = useState<string>("all");
@@ -216,19 +216,19 @@ export default function Accounts() {
   const [addOpen, setAddOpen] = useState(false);
   const [detailAccount, setDetailAccount] = useState<SocialAccount | null>(null);
 
-  // Derived unique values for filters
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
   const uniqueTags = useMemo(() => [...new Set(accounts.flatMap((a) => a.tags))], [accounts]);
-  const uniqueGroups = useMemo(() => [...new Set(accounts.map((a) => a.boundEmployee).filter(Boolean))], [accounts]);
+  const uniqueGroups = useMemo(() => [...new Set(accounts.map((a) => a.group).filter(Boolean))], [accounts]);
 
   const filtered = useMemo(() => {
     return accounts.filter((a) => {
       if (accountFilter !== "all" && a.username !== accountFilter) return false;
+      if (platformFilter !== "all" && a.platform !== platformFilter) return false;
       if (statusFilter !== "all" && a.status !== statusFilter) return false;
       if (countryFilter !== "all" && a.region !== countryFilter) return false;
       if (tagFilter !== "all" && !a.tags.includes(tagFilter)) return false;
-      if (groupFilter !== "all" && a.boundEmployee !== groupFilter) return false;
+      if (groupFilter !== "all" && a.group !== groupFilter) return false;
       if (deviceSearch) {
         const q = deviceSearch.toLowerCase();
         if (!a.device.toLowerCase().includes(q)) return false;
@@ -237,9 +237,8 @@ export default function Accounts() {
       if (dateTo && a.createdAt > dateTo) return false;
       return true;
     });
-  }, [accounts, accountFilter, statusFilter, countryFilter, tagFilter, groupFilter, deviceSearch, dateFrom, dateTo]);
+  }, [accounts, accountFilter, platformFilter, statusFilter, countryFilter, tagFilter, groupFilter, deviceSearch, dateFrom, dateTo]);
 
-  // Stats
   const stats = useMemo(() => {
     const total = accounts.length;
     const normal = accounts.filter((a) => a.status === "正常").length;
@@ -263,12 +262,27 @@ export default function Accounts() {
     }
   };
 
+  const handleReset = () => {
+    setAccountFilter("all");
+    setDeviceSearch("");
+    setGroupFilter("all");
+    setPlatformFilter("all");
+    setStatusFilter("all");
+    setCountryFilter("all");
+    setTagFilter("all");
+    setDateFrom("");
+    setDateTo("");
+  };
+
   return (
     <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">账号管理</h1>
-        <Button onClick={() => setAddOpen(true)}><Plus className="h-4 w-4 mr-1" />添加账号</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => toast.info("批量导入功能开发中")}><Upload className="h-4 w-4 mr-1" />批量导入</Button>
+          <Button onClick={() => setAddOpen(true)}><Plus className="h-4 w-4 mr-1" />添加账号</Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -279,7 +293,7 @@ export default function Accounts() {
         <StatCard label="封禁" value={stats.banned} icon={<Ban className="h-5 w-5 text-destructive" />} />
       </div>
 
-      {/* Filters - 3 col grid matching reference */}
+      {/* Filters */}
       <div className="rounded-lg border bg-card p-4 space-y-3">
         <div className="grid grid-cols-3 gap-x-6 gap-y-3">
           {/* Row 1 */}
@@ -344,11 +358,29 @@ export default function Accounts() {
 
           {/* Row 3 */}
           <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">所属平台</Label>
+            <Select value={platformFilter} onValueChange={setPlatformFilter}>
+              <SelectTrigger><SelectValue placeholder="全部" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                <SelectItem value="TikTok">TikTok</SelectItem>
+                <SelectItem value="Instagram">Ins</SelectItem>
+                <SelectItem value="WhatsApp">WhatsApp</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2 col-span-2">
             <Label className="text-sm text-muted-foreground whitespace-nowrap w-16 shrink-0 text-right">发布时间</Label>
             <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="flex-1" />
             <span className="text-muted-foreground text-sm">~</span>
             <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="flex-1" />
           </div>
+        </div>
+
+        {/* Reset & Search */}
+        <div className="flex items-center justify-end gap-2 pt-1">
+          <Button variant="outline" size="sm" onClick={handleReset}><RefreshCw className="h-3.5 w-3.5 mr-1" />重置</Button>
+          <Button size="sm" onClick={() => toast.info("搜索已应用")}>🔍 搜索</Button>
         </div>
 
         {/* Batch actions */}
@@ -359,6 +391,23 @@ export default function Accounts() {
             <Button variant="destructive" size="sm">批量删除</Button>
           </div>
         )}
+      </div>
+
+      {/* Toolbar */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1 flex-wrap">
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Play className="h-3.5 w-3.5 mr-1" />发布视频</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Settings className="h-3.5 w-3.5 mr-1" />自动养号</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><EyeOff className="h-3.5 w-3.5 mr-1" />隐藏视频</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Settings className="h-3.5 w-3.5 mr-1" />分组管理</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><RefreshCw className="h-3.5 w-3.5 mr-1" />同步账号数据</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Download className="h-3.5 w-3.5 mr-1" />导出作品数据</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
+        </div>
+        <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Plus className="h-3.5 w-3.5 mr-1" />标签管理</Button>
       </div>
 
       {/* Table */}
@@ -373,79 +422,87 @@ export default function Accounts() {
                 />
               </TableHead>
               <TableHead>账号</TableHead>
-              <TableHead>平台</TableHead>
-              <TableHead>状态</TableHead>
               <TableHead>粉丝</TableHead>
-              <TableHead>发帖</TableHead>
-              <TableHead>绑定云机</TableHead>
-              <TableHead>地区</TableHead>
-              <TableHead>负责人</TableHead>
-              <TableHead>最后活跃</TableHead>
-              <TableHead className="w-12">操作</TableHead>
+              <TableHead>关注</TableHead>
+              <TableHead>点赞</TableHead>
+              <TableHead>播放量</TableHead>
+              <TableHead>状态</TableHead>
+              <TableHead>手机编号</TableHead>
+              <TableHead>标签</TableHead>
+              <TableHead>分组</TableHead>
+              <TableHead>发布时间</TableHead>
+              <TableHead>绑定状态</TableHead>
+              <TableHead>国家</TableHead>
+              <TableHead>操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.map((acc) => {
-              const pc = platformConfig[acc.platform];
               const sc = statusConfig[acc.status];
               return (
-                <TableRow key={acc.id} className="group cursor-pointer" onClick={() => setDetailAccount(acc)}>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
+                <TableRow key={acc.id} className="group">
+                  <TableCell>
                     <Checkbox checked={selectedIds.has(acc.id)} onCheckedChange={() => toggleSelect(acc.id)} />
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2.5">
-                      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground shrink-0">
-                        {acc.nickname.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm leading-tight">{acc.nickname}</p>
-                        <p className="text-xs text-muted-foreground font-mono">{acc.username}</p>
-                      </div>
-                    </div>
+                    <button
+                      className="text-primary hover:underline text-sm font-medium text-left"
+                      onClick={() => setDetailAccount(acc)}
+                    >
+                      {acc.username}
+                    </button>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className={pc.color}>
-                      <span className="flex items-center gap-1">{pc.icon} {pc.label}</span>
-                    </Badge>
-                  </TableCell>
+                  <TableCell className="font-mono text-sm">{formatNumber(acc.followers)}</TableCell>
+                  <TableCell className="font-mono text-sm">{acc.following}</TableCell>
+                  <TableCell className="font-mono text-sm">{formatNumber(acc.likes)}</TableCell>
+                  <TableCell className="font-mono text-sm">{formatNumber(acc.views)}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className={sc.color}>
                       <span className="flex items-center gap-1">{sc.icon} {acc.status}</span>
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-mono text-sm">{acc.platform === "WhatsApp" ? "—" : formatNumber(acc.followers)}</TableCell>
-                  <TableCell className="font-mono text-sm">{acc.platform === "WhatsApp" ? "—" : acc.posts}</TableCell>
-                  <TableCell className="font-mono text-muted-foreground text-sm">{acc.device}</TableCell>
+                  <TableCell className="font-mono text-muted-foreground text-xs">{acc.device || "—"}</TableCell>
+                  <TableCell className="text-sm">{acc.tags.join(", ")}</TableCell>
+                  <TableCell className="text-sm">{acc.group}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{acc.createdAt || "—"}</TableCell>
+                  <TableCell>
+                    <span className={`text-sm ${acc.bindStatus === "绑定" ? "text-primary" : "text-muted-foreground"}`}>
+                      {acc.bindStatus}
+                    </span>
+                  </TableCell>
                   <TableCell className="text-sm">{acc.region}</TableCell>
-                  <TableCell className="text-sm">{acc.boundEmployee}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{acc.lastActive}</TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setDetailAccount(acc)}><Eye className="h-4 w-4 mr-2" />查看详情</DropdownMenuItem>
-                        <DropdownMenuItem><Edit2 className="h-4 w-4 mr-2" />编辑</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive"><Trash2 className="h-4 w-4 mr-2" />删除</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <button className="text-xs text-primary hover:underline whitespace-nowrap" onClick={() => toast.info("账号数据功能开发中")}>账号数据</button>
+                      <button className="text-xs text-primary hover:underline whitespace-nowrap" onClick={() => setDetailAccount(acc)}>基本信息</button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="text-xs text-primary hover:underline whitespace-nowrap">更多</button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setDetailAccount(acc)}><Eye className="h-4 w-4 mr-2" />查看详情</DropdownMenuItem>
+                          <DropdownMenuItem><Edit2 className="h-4 w-4 mr-2" />编辑</DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive"><Trash2 className="h-4 w-4 mr-2" />删除</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               );
             })}
             {filtered.length === 0 && (
               <TableRow>
-                <TableCell colSpan={11} className="text-center text-muted-foreground py-12">
+                <TableCell colSpan={14} className="text-center text-muted-foreground py-12">
                   暂无匹配的账号数据
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+        {/* Footer */}
+        <div className="flex items-center justify-between px-4 py-3 border-t text-sm text-muted-foreground">
+          <span>共 {filtered.length} 条</span>
+        </div>
       </div>
 
       {/* Dialogs */}
