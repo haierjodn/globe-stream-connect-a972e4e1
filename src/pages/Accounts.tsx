@@ -553,6 +553,7 @@ export default function Accounts() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <AddTapProductDialog open={tapProductOpen} onOpenChange={setTapProductOpen} selectedCount={selectedIds.size} />
     </div>
   );
 }
