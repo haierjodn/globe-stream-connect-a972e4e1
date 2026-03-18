@@ -28,6 +28,7 @@ import { GroupManageDialog } from "@/components/GroupManageDialog";
 import { AddTapProductDialog } from "@/components/AddTapProductDialog";
 import { BatchModifyTagGroupDialog } from "@/components/BatchModifyTagGroupDialog";
 import { BindDeviceDialog } from "@/components/BindDeviceDialog";
+import { AssignUserDialog } from "@/components/AssignUserDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
@@ -236,6 +237,7 @@ export default function Accounts() {
   const [tapProductOpen, setTapProductOpen] = useState(false);
   const [batchModifyOpen, setBatchModifyOpen] = useState(false);
   const [bindDeviceOpen, setBindDeviceOpen] = useState(false);
+  const [assignUserOpen, setAssignUserOpen] = useState(false);
   const noSelection = selectedIds.size === 0;
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
@@ -434,7 +436,7 @@ export default function Accounts() {
           <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setTapProductOpen(true)}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
           <Button variant="outline" size="sm" onClick={() => setBatchModifyOpen(true)}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
           <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setBindDeviceOpen(true)}><Monitor className="h-3.5 w-3.5 mr-1" />绑定云机</Button>
-          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => toast.info("功能开发中")}><UserPlus className="h-3.5 w-3.5 mr-1" />分配给用户</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setAssignUserOpen(true)}><UserPlus className="h-3.5 w-3.5 mr-1" />分配给用户</Button>
         </div>
         <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Plus className="h-3.5 w-3.5 mr-1" />标签管理</Button>
       </div>
@@ -561,6 +563,7 @@ export default function Accounts() {
       <AddTapProductDialog open={tapProductOpen} onOpenChange={setTapProductOpen} selectedCount={selectedIds.size} />
       <BatchModifyTagGroupDialog open={batchModifyOpen} onOpenChange={setBatchModifyOpen} />
       <BindDeviceDialog open={bindDeviceOpen} onOpenChange={setBindDeviceOpen} selectedAccounts={accounts.filter((a) => selectedIds.has(a.id))} />
+      <AssignUserDialog open={assignUserOpen} onOpenChange={setAssignUserOpen} selectedAccounts={accounts.filter((a) => selectedIds.has(a.id))} />
     </div>
   );
 }
