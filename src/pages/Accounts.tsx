@@ -26,6 +26,7 @@ import { ModifyTagDialog } from "@/components/ModifyTagDialog";
 import { MoveGroupDialog } from "@/components/MoveGroupDialog";
 import { GroupManageDialog } from "@/components/GroupManageDialog";
 import { AddTapProductDialog } from "@/components/AddTapProductDialog";
+import { BatchModifyTagGroupDialog } from "@/components/BatchModifyTagGroupDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
