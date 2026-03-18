@@ -512,6 +512,7 @@ export default function Accounts() {
       {/* Dialogs */}
       <AddAccountDialog open={addOpen} onOpenChange={setAddOpen} />
       <AccountDetailDialog account={detailAccount} open={!!detailAccount} onOpenChange={(v) => !v && setDetailAccount(null)} />
+      <PublishVideoDialog open={publishVideoOpen} onOpenChange={setPublishVideoOpen} />
     </div>
   );
 }
