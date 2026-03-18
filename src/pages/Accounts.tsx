@@ -526,6 +526,8 @@ export default function Accounts() {
       <AutoNurtureDialog open={autoNurtureOpen} onOpenChange={setAutoNurtureOpen} />
       <HideVideoDialog open={hideVideoOpen} onOpenChange={setHideVideoOpen} />
       <ModifyTagDialog open={modifyTagOpen} onOpenChange={setModifyTagOpen} />
+      <MoveGroupDialog open={moveGroupOpen} onOpenChange={setMoveGroupOpen} />
+      <GroupManageDialog open={groupManageOpen} onOpenChange={setGroupManageOpen} />
     </div>
   );
 }
