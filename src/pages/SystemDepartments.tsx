@@ -120,6 +120,9 @@ export default function SystemDepartments() {
     setFormSort(String(dept.sort));
     setFormStatus(dept.status);
     setFormParent(dept.parentId || "none");
+    setFormLeader("");
+    setFormPhone("");
+    setFormEmail("");
     setDialogOpen(true);
   };
 
