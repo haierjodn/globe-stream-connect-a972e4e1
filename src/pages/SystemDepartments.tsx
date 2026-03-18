@@ -69,6 +69,9 @@ export default function SystemDepartments() {
   const [formSort, setFormSort] = useState("0");
   const [formStatus, setFormStatus] = useState<"正常" | "停用">("正常");
   const [formParent, setFormParent] = useState<string>("none");
+  const [formLeader, setFormLeader] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formEmail, setFormEmail] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingDept, setDeletingDept] = useState<DeptNode | null>(null);
   const [allExpanded, setAllExpanded] = useState(true);
