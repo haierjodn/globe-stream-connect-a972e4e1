@@ -18,6 +18,7 @@ import {
   RefreshCw, Download, Tag, FolderOpen, Settings, Play, EyeOff, ShoppingBag, FileText
 } from "lucide-react";
 import { PublishVideoDialog } from "@/components/PublishVideoDialog";
+import { AutoNurtureDialog } from "@/components/AutoNurtureDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
