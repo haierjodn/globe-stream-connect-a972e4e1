@@ -322,17 +322,7 @@ export default function SystemRoles() {
       </Dialog>
 
       {/* Assign User Dialog */}
-      <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>分配用户 - {assignRole?.name}</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground">为角色「{assignRole?.name}」分配用户的功能正在开发中。</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAssignOpen(false)}>关闭</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <RoleAssignUserDialog open={assignOpen} onOpenChange={setAssignOpen} roleName={assignRole?.name || ""} />
     </div>
   );
 }
