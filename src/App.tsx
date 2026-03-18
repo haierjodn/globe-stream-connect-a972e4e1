@@ -27,6 +27,9 @@ import TenantConfig from "@/pages/TenantConfig";
 import Billing from "@/pages/Billing";
 import BandwidthBilling from "@/pages/BandwidthBilling";
 import Audit from "@/pages/Audit";
+import SystemDepartments from "@/pages/SystemDepartments";
+import SystemRoles from "@/pages/SystemRoles";
+import SystemUsers from "@/pages/SystemUsers";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
