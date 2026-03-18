@@ -14,8 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
-  Search, Plus, MoreHorizontal, Edit2, Trash2, Eye, Users, Heart,
-  FileText, AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video
+  Plus, MoreHorizontal, Edit2, Trash2, Eye, Users,
+  AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video
 } from "lucide-react";
 
 // ── Platform config ──
