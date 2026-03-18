@@ -20,6 +20,7 @@ import {
 import { PublishVideoDialog } from "@/components/PublishVideoDialog";
 import { AutoNurtureDialog } from "@/components/AutoNurtureDialog";
 import { HideVideoDialog } from "@/components/HideVideoDialog";
+import { ModifyTagDialog } from "@/components/ModifyTagDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
