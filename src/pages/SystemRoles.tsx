@@ -289,6 +289,24 @@ export default function SystemRoles() {
     setSearchName(""); setStatusFilter("全部"); setDateStart(""); setDateEnd("");
   };
 
+  const handleExport = () => {
+    const exportData = selectedIds.size > 0
+      ? filtered.filter(r => selectedIds.has(r.id))
+      : filtered;
+    if (exportData.length === 0) { toast.error("没有可导出的数据"); return; }
+    const header = ["角色名称", "显示顺序", "状态", "创建时间"];
+    const rows = exportData.map(r => [r.name, r.sort, r.status ? "正常" : "停用", r.createdAt]);
+    const csvContent = "\uFEFF" + [header, ...rows].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `角色管理_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`已导出 ${exportData.length} 条数据`);
+  };
+
   const renderMenuTree = (nodes: MenuNode[], level = 0) => {
     return nodes.map(node => {
       const hasChildren = node.children && node.children.length > 0;
@@ -361,7 +379,7 @@ export default function SystemRoles() {
       <div className="rounded-lg border bg-card">
         <div className="flex items-center gap-3 p-4 border-b">
           <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" />新增</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("导出功能开发中")}><Download className="h-4 w-4 mr-1" />导出</Button>
+          <Button variant="outline" size="sm" onClick={handleExport}><Download className="h-4 w-4 mr-1" />导出</Button>
         </div>
         <Table>
           <TableHeader>
