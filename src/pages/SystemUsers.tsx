@@ -17,6 +17,7 @@ interface SystemUser {
   id: string;
   name: string;
   nickname: string;
+  tenant: string;
   email: string;
   phone: string;
   department: string;
