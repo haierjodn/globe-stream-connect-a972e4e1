@@ -31,7 +31,7 @@ export default function Login() {
   const [newPwd, setNewPwd] = useState("");
   const [confirmPwd, setConfirmPwd] = useState("");
 
-  const startCooldown = useCallback((setter: (v: number) => void) => {
+  const startCooldown = useCallback((setter: React.Dispatch<React.SetStateAction<number>>) => {
     setter(60);
     const timer = setInterval(() => {
       setter(prev => {
