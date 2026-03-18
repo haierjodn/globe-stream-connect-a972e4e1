@@ -379,7 +379,7 @@ export default function SystemRoles() {
       <div className="rounded-lg border bg-card">
         <div className="flex items-center gap-3 p-4 border-b">
           <Button size="sm" onClick={openAdd}><Plus className="h-4 w-4 mr-1" />新增</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("导出功能开发中")}><Download className="h-4 w-4 mr-1" />导出</Button>
+          <Button variant="outline" size="sm" onClick={handleExport}><Download className="h-4 w-4 mr-1" />导出</Button>
         </div>
         <Table>
           <TableHeader>
