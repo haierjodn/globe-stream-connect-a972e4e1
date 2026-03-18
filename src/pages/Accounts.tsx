@@ -218,6 +218,7 @@ export default function Accounts() {
   const [addOpen, setAddOpen] = useState(false);
   const [detailAccount, setDetailAccount] = useState<SocialAccount | null>(null);
   const [publishVideoOpen, setPublishVideoOpen] = useState(false);
+  const [autoNurtureOpen, setAutoNurtureOpen] = useState(false);
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
