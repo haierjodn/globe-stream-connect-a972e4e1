@@ -146,11 +146,15 @@ export interface SocialAccount {
   avatar: string;
   status: "正常" | "受限" | "封禁";
   followers: number;
+  following: number;
   posts: number;
   likes: number;
+  views: number;
   device: string;
   ip: string;
   region: string;
+  group: string;
+  bindStatus: "绑定" | "解绑";
   boundEmployee: string;
   tags: string[];
   lastActive: string;
