@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Pencil, Trash2, Search, RotateCcw, Download, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { RoleAssignUserDialog } from "@/components/RoleAssignUserDialog";
 
 // Permission modules for edit dialog
 const permModules = [
@@ -321,17 +322,7 @@ export default function SystemRoles() {
       </Dialog>
 
       {/* Assign User Dialog */}
-      <Dialog open={assignOpen} onOpenChange={setAssignOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>分配用户 - {assignRole?.name}</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground">为角色「{assignRole?.name}」分配用户的功能正在开发中。</p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAssignOpen(false)}>关闭</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <RoleAssignUserDialog open={assignOpen} onOpenChange={setAssignOpen} roleName={assignRole?.name || ""} />
     </div>
   );
 }
