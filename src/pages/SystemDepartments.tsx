@@ -107,6 +107,9 @@ export default function SystemDepartments() {
     setFormSort("0");
     setFormStatus("正常");
     setFormParent(parentId || "none");
+    setFormLeader("");
+    setFormPhone("");
+    setFormEmail("");
     setDialogOpen(true);
   };
 
