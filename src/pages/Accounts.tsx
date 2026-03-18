@@ -567,6 +567,7 @@ export default function Accounts() {
       <BatchModifyTagGroupDialog open={batchModifyOpen} onOpenChange={setBatchModifyOpen} />
       <BindDeviceDialog open={bindDeviceOpen} onOpenChange={setBindDeviceOpen} selectedAccounts={accounts.filter((a) => selectedIds.has(a.id))} />
       <AssignUserDialog open={assignUserOpen} onOpenChange={setAssignUserOpen} selectedAccounts={accounts.filter((a) => selectedIds.has(a.id))} />
+      <AssignTenantDialog open={assignTenantOpen} onOpenChange={setAssignTenantOpen} selectedAccounts={accounts.filter((a) => selectedIds.has(a.id))} />
     </div>
   );
 }
