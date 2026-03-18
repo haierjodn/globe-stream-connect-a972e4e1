@@ -20,6 +20,7 @@ import {
 import { PublishVideoDialog } from "@/components/PublishVideoDialog";
 import { AutoNurtureDialog } from "@/components/AutoNurtureDialog";
 import { HideVideoDialog } from "@/components/HideVideoDialog";
+import { ModifyTagDialog } from "@/components/ModifyTagDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
@@ -221,6 +222,7 @@ export default function Accounts() {
   const [publishVideoOpen, setPublishVideoOpen] = useState(false);
   const [autoNurtureOpen, setAutoNurtureOpen] = useState(false);
   const [hideVideoOpen, setHideVideoOpen] = useState(false);
+  const [modifyTagOpen, setModifyTagOpen] = useState(false);
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
@@ -405,7 +407,7 @@ export default function Accounts() {
           <Button variant="outline" size="sm" onClick={() => setPublishVideoOpen(true)}><Play className="h-3.5 w-3.5 mr-1" />发布视频</Button>
           <Button variant="outline" size="sm" onClick={() => setAutoNurtureOpen(true)}><Settings className="h-3.5 w-3.5 mr-1" />自动养号</Button>
           <Button variant="outline" size="sm" onClick={() => setHideVideoOpen(true)}><EyeOff className="h-3.5 w-3.5 mr-1" />隐藏视频</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
+          <Button variant="outline" size="sm" onClick={() => setModifyTagOpen(true)}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Settings className="h-3.5 w-3.5 mr-1" />分组管理</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><RefreshCw className="h-3.5 w-3.5 mr-1" />同步账号数据</Button>
@@ -519,6 +521,7 @@ export default function Accounts() {
       <PublishVideoDialog open={publishVideoOpen} onOpenChange={setPublishVideoOpen} />
       <AutoNurtureDialog open={autoNurtureOpen} onOpenChange={setAutoNurtureOpen} />
       <HideVideoDialog open={hideVideoOpen} onOpenChange={setHideVideoOpen} />
+      <ModifyTagDialog open={modifyTagOpen} onOpenChange={setModifyTagOpen} />
     </div>
   );
 }
