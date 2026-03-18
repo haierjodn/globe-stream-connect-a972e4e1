@@ -398,7 +398,7 @@ export default function Accounts() {
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Play className="h-3.5 w-3.5 mr-1" />发布视频</Button>
+          <Button variant="outline" size="sm" onClick={() => setPublishVideoOpen(true)}><Play className="h-3.5 w-3.5 mr-1" />发布视频</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Settings className="h-3.5 w-3.5 mr-1" />自动养号</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><EyeOff className="h-3.5 w-3.5 mr-1" />隐藏视频</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
