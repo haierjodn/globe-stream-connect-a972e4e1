@@ -233,6 +233,7 @@ export default function Accounts() {
   const [groupManageOpen, setGroupManageOpen] = useState(false);
   const [syncConfirmOpen, setSyncConfirmOpen] = useState(false);
   const [tapProductOpen, setTapProductOpen] = useState(false);
+  const [batchModifyOpen, setBatchModifyOpen] = useState(false);
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
