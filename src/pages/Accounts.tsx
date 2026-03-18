@@ -25,6 +25,7 @@ import { HideVideoDialog } from "@/components/HideVideoDialog";
 import { ModifyTagDialog } from "@/components/ModifyTagDialog";
 import { MoveGroupDialog } from "@/components/MoveGroupDialog";
 import { GroupManageDialog } from "@/components/GroupManageDialog";
+import { AddTapProductDialog } from "@/components/AddTapProductDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
