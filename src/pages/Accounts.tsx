@@ -518,6 +518,7 @@ export default function Accounts() {
       <AccountDetailDialog account={detailAccount} open={!!detailAccount} onOpenChange={(v) => !v && setDetailAccount(null)} />
       <PublishVideoDialog open={publishVideoOpen} onOpenChange={setPublishVideoOpen} />
       <AutoNurtureDialog open={autoNurtureOpen} onOpenChange={setAutoNurtureOpen} />
+      <HideVideoDialog open={hideVideoOpen} onOpenChange={setHideVideoOpen} />
     </div>
   );
 }
