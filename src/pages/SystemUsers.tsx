@@ -334,6 +334,7 @@ export default function SystemUsers() {
                 </TableCell>
                 <TableCell className="font-medium text-sm">{user.name}</TableCell>
                 <TableCell className="text-sm">{user.nickname}</TableCell>
+                <TableCell className="text-sm">{user.tenant}</TableCell>
                 <TableCell className="text-sm">{user.department}</TableCell>
                 <TableCell className="text-sm">{user.phone}</TableCell>
                 <TableCell className="text-center">
