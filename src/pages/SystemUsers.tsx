@@ -17,6 +17,7 @@ interface SystemUser {
   id: string;
   name: string;
   nickname: string;
+  tenant: string;
   email: string;
   phone: string;
   department: string;
@@ -30,15 +31,15 @@ interface SystemUser {
 }
 
 const mockUsers: SystemUser[] = [
-  { id: "U-001", name: "zhangwei", nickname: "张伟", email: "zhangwei@company.com", phone: "138****1234", department: "运营部", roles: ["运营团队"], gender: "男", dataPermission: "本部门", remark: "", status: true, lastLogin: "2026-03-18 09:30", createdAt: "2025-12-01 10:00:00" },
-  { id: "U-002", name: "lina", nickname: "李娜", email: "lina@company.com", phone: "139****5678", department: "运营部", roles: ["租户普通用户"], gender: "女", dataPermission: "本人", remark: "", status: true, lastLogin: "2026-03-18 08:15", createdAt: "2026-01-10 14:30:00" },
-  { id: "U-003", name: "wangfang", nickname: "王芳", email: "wangfang@company.com", phone: "137****9012", department: "运营部", roles: ["租户普通用户"], gender: "女", dataPermission: "本人", remark: "", status: true, lastLogin: "2026-03-17 17:45", createdAt: "2026-01-15 09:00:00" },
-  { id: "U-004", name: "zhaoming", nickname: "赵明", email: "zhaoming@company.com", phone: "136****3456", department: "技术部", roles: ["管理员"], gender: "男", dataPermission: "全部", remark: "", status: true, lastLogin: "2026-03-18 10:00", createdAt: "2025-11-20 08:00:00" },
-  { id: "U-005", name: "liuyang", nickname: "刘洋", email: "liuyang@company.com", phone: "135****7890", department: "技术部", roles: ["租户普通用户"], gender: "男", dataPermission: "本人", remark: "", status: false, lastLogin: "2026-03-10 14:20", createdAt: "2026-02-01 16:00:00" },
-  { id: "U-006", name: "wanglei", nickname: "王磊", email: "wanglei@company.com", phone: "133****2345", department: "销售部", roles: ["获客专员"], gender: "男", dataPermission: "本部门", remark: "", status: true, lastLogin: "2026-03-18 07:50", createdAt: "2026-01-20 11:30:00" },
-  { id: "U-007", name: "chenjing", nickname: "陈静", email: "chenjing@company.com", phone: "132****6789", department: "销售部", roles: ["租户管理员"], gender: "女", dataPermission: "本部门及以下", remark: "", status: true, lastLogin: "2026-03-17 16:30", createdAt: "2025-12-15 13:00:00" },
-  { id: "U-008", name: "zhoujie", nickname: "周杰", email: "zhoujie@company.com", phone: "131****0123", department: "销售部", roles: ["租户普通用户"], gender: "男", dataPermission: "本人", remark: "", status: true, lastLogin: "2026-03-16 11:00", createdAt: "2026-02-20 09:30:00" },
-  { id: "U-009", name: "admin", nickname: "超级管理员", email: "admin@seaisee.com", phone: "130****0001", department: "总部", roles: ["管理员", "体验权限"], gender: "男", dataPermission: "超级管理员", remark: "", status: true, lastLogin: "2026-03-18 10:15", createdAt: "2025-01-01 00:00:00" },
+  { id: "U-001", name: "zhangwei", nickname: "张伟", tenant: "环球贸易科技有限公司", email: "zhangwei@company.com", phone: "138****1234", department: "运营部", roles: ["运营团队"], gender: "男", dataPermission: "本部门", remark: "", status: true, lastLogin: "2026-03-18 09:30", createdAt: "2025-12-01 10:00:00" },
+  { id: "U-002", name: "lina", nickname: "李娜", tenant: "环球贸易科技有限公司", email: "lina@company.com", phone: "139****5678", department: "运营部", roles: ["租户普通用户"], gender: "女", dataPermission: "本人", remark: "", status: true, lastLogin: "2026-03-18 08:15", createdAt: "2026-01-10 14:30:00" },
+  { id: "U-003", name: "wangfang", nickname: "王芳", tenant: "环球贸易科技有限公司", email: "wangfang@company.com", phone: "137****9012", department: "运营部", roles: ["租户普通用户"], gender: "女", dataPermission: "本人", remark: "", status: true, lastLogin: "2026-03-17 17:45", createdAt: "2026-01-15 09:00:00" },
+  { id: "U-004", name: "zhaoming", nickname: "赵明", tenant: "深圳智联电子商务", email: "zhaoming@company.com", phone: "136****3456", department: "技术部", roles: ["管理员"], gender: "男", dataPermission: "全部", remark: "", status: true, lastLogin: "2026-03-18 10:00", createdAt: "2025-11-20 08:00:00" },
+  { id: "U-005", name: "liuyang", nickname: "刘洋", tenant: "深圳智联电子商务", email: "liuyang@company.com", phone: "135****7890", department: "技术部", roles: ["租户普通用户"], gender: "男", dataPermission: "本人", remark: "", status: false, lastLogin: "2026-03-10 14:20", createdAt: "2026-02-01 16:00:00" },
+  { id: "U-006", name: "wanglei", nickname: "王磊", tenant: "广州跨境优品", email: "wanglei@company.com", phone: "133****2345", department: "销售部", roles: ["获客专员"], gender: "男", dataPermission: "本部门", remark: "", status: true, lastLogin: "2026-03-18 07:50", createdAt: "2026-01-20 11:30:00" },
+  { id: "U-007", name: "chenjing", nickname: "陈静", tenant: "广州跨境优品", email: "chenjing@company.com", phone: "132****6789", department: "销售部", roles: ["租户管理员"], gender: "女", dataPermission: "本部门及以下", remark: "", status: true, lastLogin: "2026-03-17 16:30", createdAt: "2025-12-15 13:00:00" },
+  { id: "U-008", name: "zhoujie", nickname: "周杰", tenant: "广州跨境优品", email: "zhoujie@company.com", phone: "131****0123", department: "销售部", roles: ["租户普通用户"], gender: "男", dataPermission: "本人", remark: "", status: true, lastLogin: "2026-03-16 11:00", createdAt: "2026-02-20 09:30:00" },
+  { id: "U-009", name: "admin", nickname: "超级管理员", tenant: "平台", email: "admin@seaisee.com", phone: "130****0001", department: "总部", roles: ["管理员", "体验权限"], gender: "男", dataPermission: "超级管理员", remark: "", status: true, lastLogin: "2026-03-18 10:15", createdAt: "2025-01-01 00:00:00" },
 ];
 
 const deptOptions = ["全部", "总部", "运营部", "技术部", "销售部"];
@@ -233,7 +234,7 @@ export default function SystemUsers() {
       const ts = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
       setUsers(prev => [...prev, {
         id: `U-${Date.now()}`, name: formNickname.trim().toLowerCase().replace(/\s/g, ""), nickname: formNickname.trim(),
-        email: formEmail.trim(), phone: formPhone, department: formDept, roles: formRoles,
+        tenant: "环球贸易科技有限公司", email: formEmail.trim(), phone: formPhone, department: formDept, roles: formRoles,
         gender: formGender, dataPermission: formDataPerm, status: formStatus, remark: formRemark,
         lastLogin: "-", createdAt: ts,
       }]);
@@ -317,6 +318,7 @@ export default function SystemUsers() {
               </TableHead>
               <TableHead>用户名称</TableHead>
               <TableHead>用户昵称</TableHead>
+              <TableHead>所属租户</TableHead>
               <TableHead>部门</TableHead>
               <TableHead>手机号码</TableHead>
               <TableHead className="w-24 text-center">状态</TableHead>
@@ -332,6 +334,7 @@ export default function SystemUsers() {
                 </TableCell>
                 <TableCell className="font-medium text-sm">{user.name}</TableCell>
                 <TableCell className="text-sm">{user.nickname}</TableCell>
+                <TableCell className="text-sm">{user.tenant}</TableCell>
                 <TableCell className="text-sm">{user.department}</TableCell>
                 <TableCell className="text-sm">{user.phone}</TableCell>
                 <TableCell className="text-center">
