@@ -2,31 +2,98 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, Search, RotateCcw, Download, UserPlus } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, RotateCcw, Download, UserPlus, ChevronRight, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { RoleAssignUserDialog } from "@/components/RoleAssignUserDialog";
 
-// Permission modules for edit dialog
-const permModules = [
-  { key: "config", label: "系统配置" },
-  { key: "operations", label: "运营管理" },
-  { key: "tenant", label: "租户管理" },
-  { key: "device", label: "云机管理" },
-  { key: "ip", label: "IP管理" },
-  { key: "account", label: "账号管理" },
-  { key: "posting", label: "发帖管理" },
-  { key: "crm", label: "CRM" },
-  { key: "billing", label: "计费统计" },
-  { key: "audit", label: "审计日志" },
-  { key: "data", label: "数据查看" },
+// Menu permission tree structure
+interface MenuNode {
+  key: string;
+  label: string;
+  children?: MenuNode[];
+}
+
+const menuTree: MenuNode[] = [
+  { key: "home", label: "首页" },
+  {
+    key: "business", label: "业务管理", children: [
+      { key: "biz_account", label: "账号管理" },
+      { key: "biz_posting", label: "发帖管理" },
+      { key: "biz_nurture", label: "养号任务" },
+    ]
+  },
+  {
+    key: "ai_leads", label: "AI智能获客", children: [
+      { key: "leads_pool", label: "线索池" },
+      { key: "leads_crm", label: "客户管理" },
+    ]
+  },
+  {
+    key: "assets", label: "素材管理", children: [
+      { key: "assets_video", label: "视频素材" },
+      { key: "assets_image", label: "图片素材" },
+    ]
+  },
+  {
+    key: "ai_video", label: "AI视频创作", children: [
+      { key: "video_script", label: "AI脚本" },
+      { key: "video_edit", label: "AI剪辑" },
+    ]
+  },
+  {
+    key: "device_mgmt", label: "设备管理", children: [
+      { key: "device_list", label: "云机列表" },
+      { key: "device_ip", label: "IP管理" },
+    ]
+  },
+  {
+    key: "package", label: "套餐管理", children: [
+      { key: "pkg_bandwidth", label: "带宽套餐" },
+      { key: "pkg_billing", label: "计费管理" },
+    ]
+  },
+  {
+    key: "live", label: "直播管理", children: [
+      { key: "live_room", label: "直播间" },
+    ]
+  },
+  {
+    key: "account_mgmt", label: "账户管理", children: [
+      { key: "acct_tenant", label: "租户配置" },
+    ]
+  },
+  { key: "openapi", label: "OpenApi" },
+  {
+    key: "personal", label: "个人中心", children: [
+      { key: "personal_info", label: "个人信息" },
+    ]
+  },
+  {
+    key: "system", label: "系统管理", children: [
+      { key: "sys_dept", label: "部门管理" },
+      { key: "sys_role", label: "角色管理" },
+      { key: "sys_user", label: "用户管理" },
+    ]
+  },
 ];
 
-const allPermKeys = permModules.map(m => m.key);
+// Collect all keys from tree
+function collectKeys(nodes: MenuNode[]): string[] {
+  return nodes.flatMap(n => [n.key, ...(n.children ? collectKeys(n.children) : [])]);
+}
+
+function collectChildKeys(node: MenuNode): string[] {
+  return node.children ? node.children.flatMap(c => [c.key, ...collectChildKeys(c)]) : [];
+}
+
+const allMenuKeys = collectKeys(menuTree);
 
 interface RoleItem {
   id: string;
@@ -34,17 +101,18 @@ interface RoleItem {
   sort: number;
   status: boolean;
   permissions: string[];
+  remark: string;
   createdAt: string;
   builtIn: boolean;
 }
 
 const defaultRoles: RoleItem[] = [
-  { id: "SR-001", name: "管理员", sort: 1, status: true, permissions: [...allPermKeys], createdAt: "2025-09-04 10:19:17", builtIn: true },
-  { id: "SR-002", name: "运营团队", sort: 1, status: true, permissions: ["device", "ip", "account", "posting", "operations"], createdAt: "2026-01-09 14:09:55", builtIn: false },
-  { id: "SR-003", name: "租户管理员", sort: 1, status: true, permissions: ["device", "ip", "account", "posting", "crm", "billing", "data"], createdAt: "2026-01-19 14:48:27", builtIn: false },
-  { id: "SR-004", name: "租户普通用户", sort: 1, status: true, permissions: ["account", "posting"], createdAt: "2026-03-04 10:04:43", builtIn: false },
-  { id: "SR-005", name: "获客专员", sort: 1, status: true, permissions: ["crm", "data"], createdAt: "2026-03-04 10:24:26", builtIn: false },
-  { id: "SR-006", name: "体验权限", sort: 31, status: true, permissions: ["data"], createdAt: "2026-01-16 09:36:10", builtIn: false },
+  { id: "SR-001", name: "管理员", sort: 1, status: true, permissions: [...allMenuKeys], remark: "", createdAt: "2025-09-04 10:19:17", builtIn: true },
+  { id: "SR-002", name: "运营团队", sort: 1, status: true, permissions: ["home", "business", "biz_account", "biz_posting", "biz_nurture", "device_mgmt", "device_list", "device_ip"], remark: "", createdAt: "2026-01-09 14:09:55", builtIn: false },
+  { id: "SR-003", name: "租户管理员", sort: 1, status: true, permissions: ["home", "business", "biz_account", "biz_posting", "device_mgmt", "device_list", "ai_leads", "leads_pool", "leads_crm", "package", "pkg_billing"], remark: "", createdAt: "2026-01-19 14:48:27", builtIn: false },
+  { id: "SR-004", name: "租户普通用户", sort: 1, status: true, permissions: ["home", "business", "biz_account", "biz_posting"], remark: "", createdAt: "2026-03-04 10:04:43", builtIn: false },
+  { id: "SR-005", name: "获客专员", sort: 1, status: true, permissions: ["home", "ai_leads", "leads_pool", "leads_crm"], remark: "", createdAt: "2026-03-04 10:24:26", builtIn: false },
+  { id: "SR-006", name: "体验权限", sort: 31, status: true, permissions: ["home"], remark: "", createdAt: "2026-01-16 09:36:10", builtIn: false },
 ];
 
 export default function SystemRoles() {
@@ -60,11 +128,14 @@ export default function SystemRoles() {
   const [formSort, setFormSort] = useState("1");
   const [formStatus, setFormStatus] = useState(true);
   const [formPerms, setFormPerms] = useState<string[]>([]);
+  const [formRemark, setFormRemark] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deletingRole, setDeletingRole] = useState<RoleItem | null>(null);
-  // Assign user dialog
   const [assignOpen, setAssignOpen] = useState(false);
   const [assignRole, setAssignRole] = useState<RoleItem | null>(null);
+  // Menu tree state
+  const [treeExpanded, setTreeExpanded] = useState<Set<string>>(new Set());
+  const [parentChildLink, setParentChildLink] = useState(true);
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -100,25 +171,94 @@ export default function SystemRoles() {
 
   const openAdd = () => {
     setEditingRole(null);
-    setFormName(""); setFormSort("1"); setFormStatus(true); setFormPerms([]);
+    setFormName(""); setFormSort("1"); setFormStatus(true); setFormPerms([]); setFormRemark("");
+    setTreeExpanded(new Set());
     setDialogOpen(true);
   };
 
   const openEdit = (role: RoleItem) => {
     setEditingRole(role);
-    setFormName(role.name); setFormSort(String(role.sort)); setFormStatus(role.status); setFormPerms([...role.permissions]);
+    setFormName(role.name); setFormSort(String(role.sort)); setFormStatus(role.status);
+    setFormPerms([...role.permissions]); setFormRemark(role.remark || "");
+    // Auto-expand parents that have checked children
+    const expandSet = new Set<string>();
+    menuTree.forEach(node => {
+      if (node.children) {
+        const childKeys = collectChildKeys(node);
+        if (childKeys.some(k => role.permissions.includes(k))) expandSet.add(node.key);
+      }
+    });
+    setTreeExpanded(expandSet);
     setDialogOpen(true);
   };
 
-  const togglePerm = (key: string) => {
-    setFormPerms(prev => prev.includes(key) ? prev.filter(p => p !== key) : [...prev, key]);
+  const toggleMenuPerm = (node: MenuNode) => {
+    const isChecked = formPerms.includes(node.key);
+    setFormPerms(prev => {
+      let next = [...prev];
+      if (isChecked) {
+        // Uncheck this node
+        next = next.filter(k => k !== node.key);
+        // If parent-child linked, also uncheck all children
+        if (parentChildLink && node.children) {
+          const childKeys = collectChildKeys(node);
+          next = next.filter(k => !childKeys.includes(k));
+        }
+      } else {
+        // Check this node
+        next.push(node.key);
+        // If parent-child linked, also check all children
+        if (parentChildLink && node.children) {
+          const childKeys = collectChildKeys(node);
+          childKeys.forEach(k => { if (!next.includes(k)) next.push(k); });
+        }
+      }
+      // If parent-child linked, update parent state
+      if (parentChildLink) {
+        menuTree.forEach(parent => {
+          if (parent.children) {
+            const childKeys = parent.children.map(c => c.key);
+            const anyChecked = childKeys.some(k => next.includes(k));
+            if (anyChecked && !next.includes(parent.key)) next.push(parent.key);
+            if (!anyChecked) next = next.filter(k => k !== parent.key);
+          }
+        });
+      }
+      return next;
+    });
+  };
+
+  const getNodeCheckState = (node: MenuNode): "checked" | "unchecked" | "indeterminate" => {
+    if (!node.children) return formPerms.includes(node.key) ? "checked" : "unchecked";
+    const childKeys = collectChildKeys(node);
+    const checkedCount = childKeys.filter(k => formPerms.includes(k)).length;
+    if (checkedCount === 0) return formPerms.includes(node.key) ? "checked" : "unchecked";
+    if (checkedCount === childKeys.length) return "checked";
+    return "indeterminate";
+  };
+
+  const toggleTreeExpand = (key: string) => {
+    setTreeExpanded(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  };
+
+  const expandAllTree = () => {
+    const allParents = menuTree.filter(n => n.children).map(n => n.key);
+    setTreeExpanded(prev => prev.size === allParents.length ? new Set() : new Set(allParents));
+  };
+
+  const selectAllPerms = () => {
+    setFormPerms(prev => prev.length === allMenuKeys.length ? [] : [...allMenuKeys]);
   };
 
   const handleSave = () => {
     if (!formName.trim()) { toast.error("请输入角色名称"); return; }
     if (editingRole) {
       setRoles(prev => prev.map(r => r.id === editingRole.id ? {
-        ...r, name: formName.trim(), sort: Number(formSort) || 1, status: formStatus, permissions: formPerms,
+        ...r, name: formName.trim(), sort: Number(formSort) || 1, status: formStatus, permissions: formPerms, remark: formRemark,
       } : r));
       toast.success("角色已更新");
     } else {
@@ -126,7 +266,7 @@ export default function SystemRoles() {
       const ts = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
       setRoles(prev => [...prev, {
         id: `SR-${Date.now()}`, name: formName.trim(), sort: Number(formSort) || 1,
-        status: formStatus, permissions: formPerms, createdAt: ts, builtIn: false,
+        status: formStatus, permissions: formPerms, remark: formRemark, createdAt: ts, builtIn: false,
       }]);
       toast.success("角色已创建");
     }
@@ -147,6 +287,37 @@ export default function SystemRoles() {
 
   const handleReset = () => {
     setSearchName(""); setStatusFilter("全部"); setDateStart(""); setDateEnd("");
+  };
+
+  const renderMenuTree = (nodes: MenuNode[], level = 0) => {
+    return nodes.map(node => {
+      const hasChildren = node.children && node.children.length > 0;
+      const isExpanded = treeExpanded.has(node.key);
+      const checkState = getNodeCheckState(node);
+      return (
+        <div key={node.key}>
+          <div
+            className={`flex items-center gap-1 py-1.5 px-2 hover:bg-muted/50 cursor-pointer ${level === 0 && hasChildren ? "bg-muted/30" : ""}`}
+            style={{ paddingLeft: `${level * 20 + 8}px` }}
+          >
+            {hasChildren ? (
+              <button onClick={() => toggleTreeExpand(node.key)} className="p-0.5 shrink-0">
+                {isExpanded ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
+              </button>
+            ) : (
+              <span className="w-[18px] shrink-0" />
+            )}
+            <Checkbox
+              checked={checkState === "checked" ? true : checkState === "indeterminate" ? "indeterminate" : false}
+              onCheckedChange={() => toggleMenuPerm(node)}
+              className="data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary"
+            />
+            <span className="text-sm ml-1" onClick={() => toggleMenuPerm(node)}>{node.label}</span>
+          </div>
+          {hasChildren && isExpanded && renderMenuTree(node.children!, level + 1)}
+        </div>
+      );
+    });
   };
 
   return (
@@ -268,43 +439,69 @@ export default function SystemRoles() {
 
       {/* Add/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingRole ? "编辑角色" : "新建角色"}</DialogTitle>
+            <DialogTitle>{editingRole ? "修改角色" : "新建角色"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>角色名称</Label>
-                <Input value={formName} onChange={e => setFormName(e.target.value)} placeholder="请输入角色名称" />
-              </div>
-              <div className="space-y-2">
-                <Label>显示顺序</Label>
-                <Input type="number" value={formSort} onChange={e => setFormSort(e.target.value)} />
-              </div>
+          <div className="space-y-5">
+            {/* 角色名称 */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0"><span className="text-destructive">*</span> 角色名称</Label>
+              <Input className="flex-1" value={formName} onChange={e => setFormName(e.target.value)} placeholder="请输入角色名称" />
             </div>
-            <div className="space-y-2">
-              <Label>状态</Label>
-              <div className="flex items-center gap-2">
-                <Switch checked={formStatus} onCheckedChange={setFormStatus} className="data-[state=checked]:bg-primary" />
-                <span className="text-sm">{formStatus ? "启用" : "停用"}</span>
-              </div>
+            {/* 角色顺序 */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0"><span className="text-destructive">*</span> 角色顺序</Label>
+              <Input type="number" className="flex-1" value={formSort} onChange={e => setFormSort(e.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label>菜单权限</Label>
-              <div className="grid grid-cols-3 gap-2 p-3 border rounded-md">
-                {permModules.map(m => (
-                  <label key={m.key} className="flex items-center gap-2 cursor-pointer text-sm">
-                    <Checkbox checked={formPerms.includes(m.key)} onCheckedChange={() => togglePerm(m.key)} />
-                    {m.label}
+            {/* 状态 */}
+            <div className="flex items-center gap-4">
+              <Label className="w-20 text-right shrink-0">状态</Label>
+              <RadioGroup value={formStatus ? "正常" : "停用"} onValueChange={v => setFormStatus(v === "正常")} className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="正常" id="role-status-normal" />
+                  <Label htmlFor="role-status-normal" className="text-sm font-normal text-primary cursor-pointer">正常</Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="停用" id="role-status-disabled" />
+                  <Label htmlFor="role-status-disabled" className="text-sm font-normal cursor-pointer">停用</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            {/* 菜单权限 */}
+            <div className="flex items-start gap-4">
+              <Label className="w-20 text-right shrink-0 pt-1">菜单权限</Label>
+              <div className="flex-1 space-y-2">
+                {/* Toolbar */}
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-1.5 cursor-pointer text-sm">
+                    <Checkbox onCheckedChange={expandAllTree} checked={treeExpanded.size === menuTree.filter(n => n.children).length} />
+                    展开/折叠
                   </label>
-                ))}
+                  <label className="flex items-center gap-1.5 cursor-pointer text-sm">
+                    <Checkbox checked={formPerms.length === allMenuKeys.length} onCheckedChange={selectAllPerms} />
+                    全选/全不选
+                  </label>
+                  <label className="flex items-center gap-1.5 cursor-pointer text-sm">
+                    <Checkbox checked={parentChildLink} onCheckedChange={v => setParentChildLink(!!v)} className="data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
+                    <span className="text-primary font-medium">父子联动</span>
+                  </label>
+                </div>
+                {/* Tree */}
+                <div className="border rounded-md max-h-[320px] overflow-y-auto">
+                  {renderMenuTree(menuTree)}
+                </div>
               </div>
+            </div>
+            {/* 备注 */}
+            <div className="flex items-start gap-4">
+              <Label className="w-20 text-right shrink-0 pt-2">备注</Label>
+              <Textarea className="flex-1" placeholder="请输入内容" value={formRemark} onChange={e => setFormRemark(e.target.value)} rows={3} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>取消</Button>
-            <Button onClick={handleSave}>确定</Button>
+            <Button onClick={handleSave}>确 定</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>取 消</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
