@@ -521,6 +521,7 @@ export default function Accounts() {
       <PublishVideoDialog open={publishVideoOpen} onOpenChange={setPublishVideoOpen} />
       <AutoNurtureDialog open={autoNurtureOpen} onOpenChange={setAutoNurtureOpen} />
       <HideVideoDialog open={hideVideoOpen} onOpenChange={setHideVideoOpen} />
+      <ModifyTagDialog open={modifyTagOpen} onOpenChange={setModifyTagOpen} />
     </div>
   );
 }
