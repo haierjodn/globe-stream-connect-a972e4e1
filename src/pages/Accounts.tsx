@@ -560,6 +560,7 @@ export default function Accounts() {
       </AlertDialog>
       <AddTapProductDialog open={tapProductOpen} onOpenChange={setTapProductOpen} selectedCount={selectedIds.size} />
       <BatchModifyTagGroupDialog open={batchModifyOpen} onOpenChange={setBatchModifyOpen} />
+      <BindDeviceDialog open={bindDeviceOpen} onOpenChange={setBindDeviceOpen} selectedAccounts={accounts.filter((a) => selectedIds.has(a.id))} />
     </div>
   );
 }
