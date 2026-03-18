@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Server, Globe, Wifi,
-  Users, Shield, Settings,
+  Users, Shield, Settings, Building2, UserCheck,
   UserCircle, ListChecks, Send, BarChart3,
   Video, FileText, Scissors,
   Target, Database, Inbox,

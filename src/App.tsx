@@ -72,6 +72,9 @@ const App = () => (
               <Route path="/billing" element={<Billing />} />
               <Route path="/bandwidth-billing" element={<BandwidthBilling />} />
               <Route path="/audit" element={<Audit />} />
+              <Route path="/system/departments" element={<SystemDepartments />} />
+              <Route path="/system/roles" element={<SystemRoles />} />
+              <Route path="/system/users" element={<SystemUsers />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
