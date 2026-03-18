@@ -318,6 +318,7 @@ export default function SystemUsers() {
               </TableHead>
               <TableHead>用户名称</TableHead>
               <TableHead>用户昵称</TableHead>
+              <TableHead>所属租户</TableHead>
               <TableHead>部门</TableHead>
               <TableHead>手机号码</TableHead>
               <TableHead className="w-24 text-center">状态</TableHead>
