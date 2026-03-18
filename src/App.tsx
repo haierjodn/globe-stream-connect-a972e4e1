@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { AppLayout } from "@/components/AppLayout";
 import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Devices from "@/pages/Devices";
 import IPPool from "@/pages/IPPool";
