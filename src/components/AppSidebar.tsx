@@ -67,6 +67,14 @@ const navGroups = [
     ],
   },
   {
+    label: "系统管理",
+    items: [
+      { title: "部门管理", url: "/system/departments", icon: Building2 },
+      { title: "角色管理", url: "/system/roles", icon: Shield },
+      { title: "用户管理", url: "/system/users", icon: UserCheck },
+    ],
+  },
+  {
     label: "计费统计",
     items: [
       { title: "用量统计", url: "/billing", icon: CreditCard },
