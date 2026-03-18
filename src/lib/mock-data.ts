@@ -175,22 +175,57 @@ export const socialAccounts: SocialAccount[] = [
 ];
 
 // Nurture tasks
+export type TaskType = "养号" | "隐藏视频" | "发布作品";
+export type TaskStatus = "待执行" | "执行中" | "执行完成" | "执行失败";
+
 export interface NurtureTask {
   id: string;
   name: string;
-  account: string;
-  status: "进行中" | "已完成" | "待执行" | "失败";
+  source: string;
+  type: TaskType;
+  startDate: string;
+  endDate: string;
+  executeTime: string;
+  createTime: string;
+  endTime: string;
   progress: number;
-  actions: string;
+  status: TaskStatus;
+  creator: string;
+}
+
+export interface NurtureSubTask {
+  id: string;
+  parentId: string;
+  taskId: string;
+  account: string;
+  executeDate: string;
+  browseVideos: number;
+  browseTime: string;
+  likeCount: number;
+  followCount: number;
+  commentCount: number;
   startTime: string;
+  endTime: string;
+  result: "成功" | "失败";
+  failReason?: string;
 }
 
 export const nurtureTasks: NurtureTask[] = [
-  { id: "NT-001", name: "新号养成 - 美国区", account: "@fashionhub_us", status: "进行中", progress: 65, actions: "浏览/点赞/评论", startTime: "2026-03-15 08:00" },
-  { id: "NT-002", name: "互动增长计划", account: "@beauty_deals", status: "进行中", progress: 42, actions: "关注/互动/发视频", startTime: "2026-03-16 10:00" },
-  { id: "NT-003", name: "英国市场预热", account: "@uk_gadgets", status: "待执行", progress: 0, actions: "浏览/搜索/点赞", startTime: "2026-03-18 09:00" },
-  { id: "NT-004", name: "纽约账号维护", account: "@nyc_trends", status: "已完成", progress: 100, actions: "全流程养号", startTime: "2026-03-10 08:00" },
-  { id: "NT-005", name: "澳洲号重新激活", account: "@oz_store", status: "失败", progress: 12, actions: "重登录/浏览", startTime: "2026-03-14 14:00" },
+  { id: "NT-001", name: "新号养成 - 美国区", source: "手动创建", type: "养号", startDate: "2026-03-15", endDate: "2026-03-22", executeTime: "08:00-12:00", createTime: "2026-03-14 16:00", endTime: "-", progress: 65, status: "执行中", creator: "admin" },
+  { id: "NT-002", name: "互动增长计划", source: "手动创建", type: "养号", startDate: "2026-03-16", endDate: "2026-03-25", executeTime: "10:00-14:00", createTime: "2026-03-15 09:00", endTime: "-", progress: 42, status: "执行中", creator: "运营A" },
+  { id: "NT-003", name: "英国市场预热", source: "定时任务", type: "发布作品", startDate: "2026-03-18", endDate: "2026-03-20", executeTime: "09:00-11:00", createTime: "2026-03-17 14:00", endTime: "-", progress: 0, status: "待执行", creator: "admin" },
+  { id: "NT-004", name: "纽约账号维护", source: "手动创建", type: "养号", startDate: "2026-03-10", endDate: "2026-03-15", executeTime: "08:00-18:00", createTime: "2026-03-09 10:00", endTime: "2026-03-15 18:00", progress: 100, status: "执行完成", creator: "运营B" },
+  { id: "NT-005", name: "澳洲号重新激活", source: "手动创建", type: "隐藏视频", startDate: "2026-03-14", endDate: "2026-03-16", executeTime: "14:00-18:00", createTime: "2026-03-13 11:00", endTime: "2026-03-15 16:30", progress: 12, status: "执行失败", creator: "运营A" },
+  { id: "NT-006", name: "日本区新号培育", source: "API", type: "养号", startDate: "2026-03-17", endDate: "2026-03-24", executeTime: "06:00-10:00", createTime: "2026-03-16 20:00", endTime: "-", progress: 30, status: "执行中", creator: "admin" },
+  { id: "NT-007", name: "东南亚发布计划", source: "定时任务", type: "发布作品", startDate: "2026-03-19", endDate: "2026-03-21", executeTime: "12:00-16:00", createTime: "2026-03-18 08:00", endTime: "-", progress: 0, status: "待执行", creator: "运营C" },
+  { id: "NT-008", name: "清理低质量视频", source: "手动创建", type: "隐藏视频", startDate: "2026-03-12", endDate: "2026-03-13", executeTime: "20:00-23:00", createTime: "2026-03-11 15:00", endTime: "2026-03-13 22:45", progress: 100, status: "执行完成", creator: "运营B" },
+];
+
+export const nurtureSubTasks: NurtureSubTask[] = [
+  { id: "NST-001", parentId: "NT-001", taskId: "NT-001", account: "@fashionhub_us", executeDate: "2026-03-15", browseVideos: 45, browseTime: "2h 15m", likeCount: 12, followCount: 3, commentCount: 5, startTime: "08:00", endTime: "12:00", result: "成功" },
+  { id: "NST-002", parentId: "NT-001", taskId: "NT-001", account: "@fashionhub_us", executeDate: "2026-03-16", browseVideos: 38, browseTime: "1h 50m", likeCount: 10, followCount: 2, commentCount: 4, startTime: "08:00", endTime: "11:45", result: "成功" },
+  { id: "NST-003", parentId: "NT-002", taskId: "NT-002", account: "@beauty_deals", executeDate: "2026-03-16", browseVideos: 52, browseTime: "2h 30m", likeCount: 15, followCount: 5, commentCount: 8, startTime: "10:00", endTime: "14:00", result: "成功" },
+  { id: "NST-004", parentId: "NT-005", taskId: "NT-005", account: "@oz_store", executeDate: "2026-03-14", browseVideos: 5, browseTime: "15m", likeCount: 0, followCount: 0, commentCount: 0, startTime: "14:00", endTime: "14:20", result: "失败", failReason: "账号登录异常" },
 ];
 
 // Content views trend
