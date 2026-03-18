@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
-  Plus, MoreHorizontal, Edit2, Trash2, Eye, Users, Upload,
+  Plus, MoreHorizontal, Edit2, Trash2, Eye, Users, Upload, Monitor, UserPlus,
   AlertTriangle, Ban, CheckCircle2, MessageCircle, Instagram, Video,
   RefreshCw, Download, Tag, FolderOpen, Settings, Play, EyeOff, ShoppingBag, FileText
 } from "lucide-react";
