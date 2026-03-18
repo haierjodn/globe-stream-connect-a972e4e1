@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Pencil, Trash2, Search, RotateCcw, Download, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { RoleAssignUserDialog } from "@/components/RoleAssignUserDialog";
 
 // Permission modules for edit dialog
 const permModules = [
