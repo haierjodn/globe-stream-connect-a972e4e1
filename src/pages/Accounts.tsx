@@ -418,8 +418,8 @@ export default function Accounts() {
           <Button variant="outline" size="sm" onClick={() => setPublishVideoOpen(true)}><Play className="h-3.5 w-3.5 mr-1" />发布视频</Button>
           <Button variant="outline" size="sm" onClick={() => setAutoNurtureOpen(true)}><Settings className="h-3.5 w-3.5 mr-1" />自动养号</Button>
           <Button variant="outline" size="sm" onClick={() => setHideVideoOpen(true)}><EyeOff className="h-3.5 w-3.5 mr-1" />隐藏视频</Button>
-          <Button variant="outline" size="sm" onClick={() => setModifyTagOpen(true)}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
-          <Button variant="outline" size="sm" onClick={() => setMoveGroupOpen(true)}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setModifyTagOpen(true)}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setMoveGroupOpen(true)}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
           <Button variant="outline" size="sm" onClick={() => setGroupManageOpen(true)}><Settings className="h-3.5 w-3.5 mr-1" />分组管理</Button>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -427,11 +427,11 @@ export default function Accounts() {
             </TooltipTrigger>
             <TooltipContent>因TikTok风控限制，每天最多只能同步2次数据。</TooltipContent>
           </Tooltip>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Download className="h-3.5 w-3.5 mr-1" />导出作品数据</Button>
-          <Button variant="outline" size="sm" onClick={() => setTapProductOpen(true)}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => toast.info("功能开发中")}><Download className="h-3.5 w-3.5 mr-1" />导出作品数据</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setTapProductOpen(true)}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
           <Button variant="outline" size="sm" onClick={() => setBatchModifyOpen(true)}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Monitor className="h-3.5 w-3.5 mr-1" />绑定云机</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><UserPlus className="h-3.5 w-3.5 mr-1" />分配给用户</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => toast.info("功能开发中")}><Monitor className="h-3.5 w-3.5 mr-1" />绑定云机</Button>
+          <Button variant="outline" size="sm" disabled={noSelection} onClick={() => toast.info("功能开发中")}><UserPlus className="h-3.5 w-3.5 mr-1" />分配给用户</Button>
         </div>
         <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Plus className="h-3.5 w-3.5 mr-1" />标签管理</Button>
       </div>
