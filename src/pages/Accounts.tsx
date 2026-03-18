@@ -18,6 +18,7 @@ import {
   RefreshCw, Download, Tag, FolderOpen, Settings, Play, EyeOff, ShoppingBag, FileText
 } from "lucide-react";
 import { PublishVideoDialog } from "@/components/PublishVideoDialog";
+import { AutoNurtureDialog } from "@/components/AutoNurtureDialog";
 
 // ── Platform config ──
 const platformConfig: Record<AccountPlatform, { label: string; color: string; icon: React.ReactNode }> = {
@@ -217,6 +218,7 @@ export default function Accounts() {
   const [addOpen, setAddOpen] = useState(false);
   const [detailAccount, setDetailAccount] = useState<SocialAccount | null>(null);
   const [publishVideoOpen, setPublishVideoOpen] = useState(false);
+  const [autoNurtureOpen, setAutoNurtureOpen] = useState(false);
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
@@ -399,7 +401,7 @@ export default function Accounts() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1 flex-wrap">
           <Button variant="outline" size="sm" onClick={() => setPublishVideoOpen(true)}><Play className="h-3.5 w-3.5 mr-1" />发布视频</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Settings className="h-3.5 w-3.5 mr-1" />自动养号</Button>
+          <Button variant="outline" size="sm" onClick={() => setAutoNurtureOpen(true)}><Settings className="h-3.5 w-3.5 mr-1" />自动养号</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><EyeOff className="h-3.5 w-3.5 mr-1" />隐藏视频</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
@@ -513,6 +515,7 @@ export default function Accounts() {
       <AddAccountDialog open={addOpen} onOpenChange={setAddOpen} />
       <AccountDetailDialog account={detailAccount} open={!!detailAccount} onOpenChange={(v) => !v && setDetailAccount(null)} />
       <PublishVideoDialog open={publishVideoOpen} onOpenChange={setPublishVideoOpen} />
+      <AutoNurtureDialog open={autoNurtureOpen} onOpenChange={setAutoNurtureOpen} />
     </div>
   );
 }
