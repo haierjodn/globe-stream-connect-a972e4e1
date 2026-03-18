@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -227,6 +229,7 @@ export default function Accounts() {
   const [modifyTagOpen, setModifyTagOpen] = useState(false);
   const [moveGroupOpen, setMoveGroupOpen] = useState(false);
   const [groupManageOpen, setGroupManageOpen] = useState(false);
+  const [syncConfirmOpen, setSyncConfirmOpen] = useState(false);
 
   const uniqueAccounts = useMemo(() => [...new Set(accounts.map((a) => a.username))], [accounts]);
   const uniqueCountries = useMemo(() => [...new Set(accounts.map((a) => a.region))], [accounts]);
@@ -414,7 +417,12 @@ export default function Accounts() {
           <Button variant="outline" size="sm" onClick={() => setModifyTagOpen(true)}><Tag className="h-3.5 w-3.5 mr-1" />修改标签</Button>
           <Button variant="outline" size="sm" onClick={() => setMoveGroupOpen(true)}><FolderOpen className="h-3.5 w-3.5 mr-1" />移动分组</Button>
           <Button variant="outline" size="sm" onClick={() => setGroupManageOpen(true)}><Settings className="h-3.5 w-3.5 mr-1" />分组管理</Button>
-          <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><RefreshCw className="h-3.5 w-3.5 mr-1" />同步账号数据</Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="sm" onClick={() => setSyncConfirmOpen(true)}><RefreshCw className="h-3.5 w-3.5 mr-1" />同步账号数据</Button>
+            </TooltipTrigger>
+            <TooltipContent>因TikTok风控限制，每天最多只能同步2次数据。</TooltipContent>
+          </Tooltip>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Download className="h-3.5 w-3.5 mr-1" />导出作品数据</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><ShoppingBag className="h-3.5 w-3.5 mr-1" />添加TAP商品</Button>
           <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Edit2 className="h-3.5 w-3.5 mr-1" />批量修改标签/分组</Button>
@@ -528,6 +536,21 @@ export default function Accounts() {
       <ModifyTagDialog open={modifyTagOpen} onOpenChange={setModifyTagOpen} />
       <MoveGroupDialog open={moveGroupOpen} onOpenChange={setMoveGroupOpen} />
       <GroupManageDialog open={groupManageOpen} onOpenChange={setGroupManageOpen} />
+      <AlertDialog open={syncConfirmOpen} onOpenChange={setSyncConfirmOpen}>
+        <AlertDialogContent className="max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>提示</AlertDialogTitle>
+            <AlertDialogDescription className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-warning shrink-0" />
+              确定同步账号数据吗？
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={() => toast.success("账号数据同步已开始")}>确认</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
