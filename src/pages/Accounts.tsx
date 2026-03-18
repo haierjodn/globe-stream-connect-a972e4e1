@@ -556,6 +556,7 @@ export default function Accounts() {
         </AlertDialogContent>
       </AlertDialog>
       <AddTapProductDialog open={tapProductOpen} onOpenChange={setTapProductOpen} selectedCount={selectedIds.size} />
+      <BatchModifyTagGroupDialog open={batchModifyOpen} onOpenChange={setBatchModifyOpen} />
     </div>
   );
 }
