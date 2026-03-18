@@ -234,7 +234,7 @@ export default function SystemUsers() {
       const ts = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
       setUsers(prev => [...prev, {
         id: `U-${Date.now()}`, name: formNickname.trim().toLowerCase().replace(/\s/g, ""), nickname: formNickname.trim(),
-        email: formEmail.trim(), phone: formPhone, department: formDept, roles: formRoles,
+        tenant: "环球贸易科技有限公司", email: formEmail.trim(), phone: formPhone, department: formDept, roles: formRoles,
         gender: formGender, dataPermission: formDataPerm, status: formStatus, remark: formRemark,
         lastLogin: "-", createdAt: ts,
       }]);
