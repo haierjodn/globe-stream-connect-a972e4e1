@@ -441,7 +441,6 @@ export default function Accounts() {
           <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setAssignUserOpen(true)}><UserPlus className="h-3.5 w-3.5 mr-1" />分配给用户</Button>
           <Button variant="outline" size="sm" disabled={noSelection} onClick={() => setAssignTenantOpen(true)}><Building2 className="h-3.5 w-3.5 mr-1" />分配给指定租户</Button>
         </div>
-        <Button variant="outline" size="sm" onClick={() => toast.info("功能开发中")}><Plus className="h-3.5 w-3.5 mr-1" />标签管理</Button>
       </div>
 
       {/* Table */}
