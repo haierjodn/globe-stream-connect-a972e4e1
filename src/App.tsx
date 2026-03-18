@@ -27,6 +27,9 @@ import TenantConfig from "@/pages/TenantConfig";
 import Billing from "@/pages/Billing";
 import BandwidthBilling from "@/pages/BandwidthBilling";
 import Audit from "@/pages/Audit";
+import SystemDepartments from "@/pages/SystemDepartments";
+import SystemRoles from "@/pages/SystemRoles";
+import SystemUsers from "@/pages/SystemUsers";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +72,9 @@ const App = () => (
               <Route path="/billing" element={<Billing />} />
               <Route path="/bandwidth-billing" element={<BandwidthBilling />} />
               <Route path="/audit" element={<Audit />} />
+              <Route path="/system/departments" element={<SystemDepartments />} />
+              <Route path="/system/roles" element={<SystemRoles />} />
+              <Route path="/system/users" element={<SystemUsers />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

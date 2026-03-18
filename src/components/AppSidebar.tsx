@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Server, Globe, Wifi,
-  Users, Shield, Settings,
+  Users, Shield, Settings, Building2, UserCheck,
   UserCircle, ListChecks, Send, BarChart3,
   Video, FileText, Scissors,
   Target, Database, Inbox,
@@ -64,6 +64,14 @@ const navGroups = [
       { title: "组织架构", url: "/org", icon: Users },
       { title: "角色权限", url: "/roles", icon: Shield },
       { title: "租户配置", url: "/tenant-config", icon: Settings },
+    ],
+  },
+  {
+    label: "系统管理",
+    items: [
+      { title: "部门管理", url: "/system/departments", icon: Building2 },
+      { title: "角色管理", url: "/system/roles", icon: Shield },
+      { title: "用户管理", url: "/system/users", icon: UserCheck },
     ],
   },
   {
