@@ -74,14 +74,14 @@ const navGroups = [
       { title: "用户管理", url: "/system/users", icon: UserCheck },
     ],
   },
-  {
-    label: "计费统计",
-    items: [
-      { title: "用量统计", url: "/billing", icon: CreditCard },
-      { title: "带宽计费", url: "/bandwidth-billing", icon: Activity },
-      { title: "审计日志", url: "/audit", icon: ScrollText },
-    ],
-  },
+  // {
+  //   label: "计费统计",
+  //   items: [
+  //     { title: "用量统计", url: "/billing", icon: CreditCard },
+  //     { title: "带宽计费", url: "/bandwidth-billing", icon: Activity },
+  //     { title: "审计日志", url: "/audit", icon: ScrollText },
+  //   ],
+  // },
 ];
 
 export function AppSidebar() {
